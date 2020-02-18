@@ -1,0 +1,24 @@
+﻿<md-dialog aria-label="Agregar Evento">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Agregar participante al Evento</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-close fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

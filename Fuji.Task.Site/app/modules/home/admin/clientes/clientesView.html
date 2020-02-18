@@ -1,0 +1,185 @@
+﻿<md-content layout="row" layout-align="center" ng-cloak>
+    <md-card flex-xs="100" flex-gt-xs="100" flex-gt-sm="100">
+        <md-toolbar md-scroll-shrink>
+            <div class="md-toolbar-tools">
+                <md-menu>
+                    <md-button aria-label="menuAdministracionClientes" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                        <md-icon md-menu-origin class="fas fa-bars fa-2x"></md-icon>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button ng-click="AgregarCliente($event)" ng-disabled="loading">
+                                <md-icon md-menu-align-target class="fas fa-plus fa-2x"></md-icon>
+                                Agregar Cliente
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+                <h2 flex md-truncate>
+                    <span>Administración de Clientes</span>
+                </h2>
+                <md-button ng-click="toggleRight()" ng-hide="isOpenRight()" ng-disabled="loading" aria-label="btnBuscar">
+                    <md-icon md-menu-align-target class="fas fa-search fa-2x"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear class="md-warn" md-mode="indeterminate" ng-if="loading"></md-progress-linear>
+        <md-card-title style="background: url('app/assets/FFM.png') ; background-size: cover;">
+            <md-card-title-text>
+                <div style="background-color: rgba(255, 255, 255, 0.4);" layout="column" layout-align="space-around stretch">
+                    <md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
+                        <md-toolbar class="md-theme-light">
+                            <h1 class="md-toolbar-tools">Buscar Clientes</h1>
+                        </md-toolbar>
+                        <md-content layout-padding>
+                            <form layout="column">
+                                <md-input-container>
+                                    <label for="testInput">Nombre del Cliente</label>
+                                    <input type="text" ng-model="busqueda.vchNombre" md-autofocus name="nombre">
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <label>Agente de Ventas</label>
+                                    <md-select ng-model="busqueda.intAgenteVentas" [width]="'100%'" name="intAgenteVentas">
+                                        <md-option ng-repeat="venta in ventas" ng-value="venta.intUsuarioID">
+                                            {{venta.vchNombre}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <label>Tipo de Cliente</label>
+                                    <md-select ng-model="busqueda.intTipoPrecio" [width]="'100%'" name="intTipoPrecio">
+                                        <md-option ng-repeat="precio in precios" ng-value="precio.intTipoPrecio">
+                                            {{precio.vchNombre}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </form>
+                            <md-button ng-click="BuscarCliente($event, busqueda)" class="md-primary" type="submit">
+                                Buscar
+                            </md-button>
+                        </md-content>
+                    </md-sidenav>
+                    <!--Pantalla modo PC-->
+                    <div layout="column" layout-align="space-around stretch">
+                        <!--<div flex id="myGrid" style="width: auto; height: 400px;" class="ag-theme-balham"></div>-->
+                        <table class="table table-sm table-hover" layout-padding>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th class="text-left">Nombre</th>
+                                    <th class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md>RFC</th>
+                                    <th class="text-left">Email</th>
+                                    <th class="text-left" show-gt-lg hide-xs show-md show-gt-md>Agente de Ventas</th>
+                                    <th class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md>Agente de Cobranza</th>
+                                    <th class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md>Fecha creación</th>
+                                    <th class="text-center">Activo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="cliente in pagedItems[currentPage]">
+                                    <td class="text-center">
+                                        <div style="margin: -5px -5px -15px -5px">
+                                            <md-menu>
+                                                <md-button aria-label="menuCliente" class="md-icon-button" ng-click="abrirMenu($mdOpenMenu, $event)">
+                                                    <md-icon md-menu-origin class="fas fa-bars fa-lg"></md-icon>
+                                                </md-button>
+                                                <md-menu-content>
+                                                    <md-menu-item>
+                                                        <md-button ng-click="ModificarCliente($event, cliente)">
+                                                            <md-icon class="fas fa-pencil-alt fa-lg"></md-icon>
+                                                            Modificar cliente
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-if="AdminClient" ng-hide="cliente.vchClienteID != ''">
+                                                        <md-button ng-click="DocumentosCliente($event, cliente)">
+                                                            <md-icon class="fas fa-file-contract fa-lg"></md-icon>
+                                                            Enviar alta Cliente
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-if="AdminClient" ng-show="!cliente.bitCompleto && !cliente.validacion.bitMigracion">
+                                                        <md-button ng-click="CargarDocumentosCliente($event, cliente)">
+                                                            <md-icon class="fas fa-file-upload fa-lg"></md-icon>
+                                                            Cargar documentos
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-if="AdminClient" ng-show="cliente.bitCompleto && !cliente.validacion.bitSolAltaClient">
+                                                        <md-button ng-click="SolAltaCliente($event, cliente)">
+                                                            <md-icon class="far fa-hand-point-right fa-lg"></md-icon>
+                                                            Solicitar Alta Cliente
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-if="AdminClient" ng-show="cliente.bitCompleto">
+                                                        <md-button ng-click="CargarDocumentosCliente($event, cliente)">
+                                                            <md-icon class="fas fa-file-upload fa-lg"></md-icon>
+                                                            Ver documentos
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-if="AdminClient">
+                                                        <md-button ng-click="DireccionesCliente($event, cliente)">
+                                                            <md-icon class="fas fa-map-marked-alt fa-lg"></md-icon>
+                                                            Direcciones
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-if="SAPClient">
+                                                        <md-button ng-click="CodigoSAPCliente($event, cliente)">
+                                                            <md-icon class="fas fa-id-card fa-lg"></md-icon>
+                                                            Código SAP
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-if="AdminClient">
+                                                        <md-button ng-show='cliente.bitActive' ng-click="EliminarCliente($event, cliente)">
+                                                            <md-icon class="fas fa-times fa-lg"></md-icon>
+                                                            Desactivar
+                                                        </md-button>
+                                                        <md-button ng-show='!cliente.bitActive' ng-click="EliminarCliente($event, cliente)">
+                                                            <md-icon class="fas fa-check fa-lg"></md-icon>
+                                                            Activar
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
+                                        </div>
+                                    </td>
+                                    <th>
+                                        <span ng-show='!cliente.bitCompletarDatos'><i class="fas fa-user-check green" style="color:green" title="Cliente Completo"></i></span>
+                                        <span ng-show='cliente.bitCompletarDatos'><i class="fas fa-user-times red" style="color:red" title="Cliente incompleto"></i></span>
+                                    </th>
+                                    <td class="text-left"> {{cliente.vchNombre}}</td>
+                                    <td class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md> {{cliente.vchRFC}}</td>
+                                    <td class="text-left"> {{cliente.vchEmail}}</td>
+                                    <td class="text-left" show-gt-lg hide-xs show-md show-gt-md> {{cliente.AgenteVentas}}</td>
+                                    <td class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md> {{cliente.AgenteCobranza}}</td>
+                                    <td class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md> {{cliente.datFecha | date}}</td>
+                                    <td class="text-center">
+                                        <span ng-show='cliente.bitActivo'><i class="fas fa-check red" style="color:green"></i></span>
+                                        <span ng-show='!cliente.bitActivo'><i class="fas fa-times green" style="color:red"></i></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="9">
+                                        <div class="text-center">
+                                            <ul class="pagination">
+                                                <li ng-class="{disabled: currentPage == 0}">
+                                                    <a href="javascript:;" ng-click="prevPage()">« Prev</a>
+                                                </li>
+                                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()" style="color: #4CAF50 !important;">
+                                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                                </li>
+                                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                                    <a href="javascript:;" ng-click="nextPage()">Next »</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </md-card-title-text>
+        </md-card-title>
+    </md-card>
+</md-content>

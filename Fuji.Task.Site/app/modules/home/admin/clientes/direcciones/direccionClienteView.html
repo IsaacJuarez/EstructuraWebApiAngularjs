@@ -1,0 +1,166 @@
+﻿<md-dialog aria-label="Direcciones">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Direcciones</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <p style="margin-bottom:20px;">Agregue las direcciones de {{cliente.vchNombre}}</p>
+                <div layout="column" layout-align="start stretch">
+                    <ng-form layout="column" name="FormularioDirCliente" layout-padding class="panel-group">
+                        <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                            <div layout="column" layout-align="start stretch" class="panel-body">
+                                <div flex layout="row" layout-align="space-between start">
+                                    <md-input-container flex>
+                                        <label>Tipo de Dirección</label>
+                                        <md-select ng-model="direccion.intTipoDireccionID" [width]="'100%'" name="intTipoDireccionID" required>
+                                            <md-option ng-repeat="tipo in TipoDireccion" ng-value="tipo.intTipoDireccionID">
+                                                {{tipo.vchTipoDireccion}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                    <md-input-container flex>
+                                        <label>Código Postal</label>
+                                        <input type="text" name="vchCodigoPostal" ng-model="direccion.vchCodigoPostal" pattern="^[0-9]+$" ng-pattern-restrict ng-required="CompletarDatos" ng-blur="CodigoPostal(direccion.vchCodigoPostal)" />
+                                        <div ng-messages="FormularioDirCliente.vchCodigoPostal.$error" ng-if="FormularioDirCliente.vchCodigoPostal.$touched">
+                                            <div ng-message="required">Necesita indicar el Código Postal de la dirección</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container flex>
+                                        <label>Poblacion</label>
+                                        <md-select ng-model="direccion.intCodigoPostalID" [width]="'100%'" name="poblacion" required>
+                                            <md-option ng-repeat="poblacion in poblaciones" ng-value="poblacion.intCodigoPostalID">
+                                                {{poblacion.vchColonia}}
+                                            </md-option>
+                                        </md-select>
+                                        <div ng-messages="FormularioDirCliente.poblacion.$error" ng-if="FormularioDirCliente.poblacion.$touched">
+                                            <div ng-message="required">Necesitas seleccionar una población</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div flex layout="row" layout-align="space-between start">
+                                    <md-input-container flex>
+                                        <label>Calle y Numero</label>
+                                        <input flex type="text" name="vchCalleYNum" ng-model="direccion.vchCalleYNum" required />
+                                        <div ng-messages="FormularioDirCliente.vchCalleYNum.$error" ng-if="FormularioDirCliente.vchCalleYNum.$touched">
+                                            <div ng-message="required">Necesita indicar la calle y numero de la dirección</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container flex>
+                                        <label>Colonia</label>
+                                        <input flex type="text" name="vchColonia" ng-model="direccion.vchColonia" />
+                                    </md-input-container>
+                                </div>
+                                <div flex layout="row" layout-align="space-between start">
+                                    <md-input-container flex>
+                                        <label>Entre calles</label>
+                                        <input flex type="text" name="vchEntreCalles" ng-model="direccion.vchEntreCalles" />
+                                    </md-input-container>
+                                    <md-input-container flex>
+                                        <label>Manzana</label>
+                                        <input flex type="text" name="vchManzana" ng-model="direccion.vchManzana" />
+                                    </md-input-container>
+                                    <md-input-container flex>
+                                        <label>Piso</label>
+                                        <input flex type="text" name="vchPiso" ng-model="direccion.vchPiso" />
+                                    </md-input-container>
+                                </div>
+                                <div flex layout="row" layout-align="space-between start">
+                                    <md-input-container flex>
+                                        <label>Estado</label>
+                                        <input type="text" name="vchEstado" ng-model="direccion.vchEstado" readonly />
+                                    </md-input-container>
+                                    <md-input-container flex>
+                                        <label>Municipio</label>
+                                        <input type="text" name="vchMunicipio" ng-model="direccion.vchMunicipio" readonly />
+                                    </md-input-container>
+                                    <md-button class="md-raised  md-primary" ng-disabled="loading" ng-click="AgregarDireccion($event,direccion)">
+                                        Agregar
+                                    </md-button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-form>
+                    <div class="panel" layout="column" layout-align="start stretch">
+                        <table style="min-width:450px">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th class="text-center">Tipo</th>
+                                    <th class="text-center">Calle y Num</th>
+                                    <th class="text-center">Entre Calles</th>
+                                    <th class="text-center">Manzana</th>
+                                    <th class="text-center">Piso</th>
+                                    <th class="text-center" show-gt-xs hide-xs>Colonia</th>
+                                    <th class="text-center" show-gt-xs hide-xs>Población</th>
+                                    <th class="text-center" show-gt-xs hide-xs>C.P.</th>
+                                    <th class="text-center" show-gt-xs hide-xs>Municipio</th>
+                                    <th class="text-center" show-gt-xs hide-xs>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="dirC in direcciones">
+                                    <td class="text-center">
+                                        <div style="margin: -5px -5px -15px -5px">
+                                            <md-menu>
+                                                <md-button aria-label="menuFactura" class="md-icon-button" ng-click="abrirMenu($mdOpenMenu, $event)">
+                                                    <md-icon md-menu-origin class="fas fa-bars fa-lg"></md-icon>
+                                                </md-button>
+                                                <md-menu-content>
+                                                    <!--<md-menu-item>
+                                                        <md-button ng-click="ModificarDireccion($event, dirC)">
+                                                            <md-icon class="fas fa-pencil-alt fa-lg"></md-icon>
+                                                            Modificar Dirección
+                                                        </md-button>
+                                                    </md-menu-item>-->
+                                                    <md-menu-item ng-show="dirC.intTipoDireccionID == 1 && dirC.bitValidada">
+                                                        <md-button ng-click="CopiarDireccion($event, dirC)">
+                                                            <md-icon class="fas fa-copy fa-lg"></md-icon>
+                                                            Copiar Dirección
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button ng-show='dirC.bitActivo' ng-click="EliminarModificacion($event, dirC)">
+                                                            <md-icon class="fas fa-times fa-lg"></md-icon>
+                                                            Desactivar
+                                                        </md-button>
+                                                        <md-button ng-show='!dirC.bitActivo' ng-click="EliminarModificacion($event, dirC)">
+                                                            <md-icon class="fas fa-check fa-lg"></md-icon>
+                                                            Activar
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
+                                        </div>
+                                    </td>
+                                    <td class="text-center"> {{dirC.vchTipoDireccion}}</td>
+                                    <td class="text-center"> {{dirC.vchCalleyNum}}</td>
+                                    <td class="text-center"> {{dirC.vchEntreCalles}}</td>
+                                    <td class="text-center"> {{dirC.vchManzana}}</td>
+                                    <td class="text-center"> {{dirC.vchPiso}}</td>
+                                    <td class="text-center" show-gt-xs hide-xs> {{dirC.vchColonia}}</td>
+                                    <td class="text-center" show-gt-xs hide-xs> {{dirC.vchPoblacion}}</td>
+                                    <td class="text-center" show-gt-xs hide-xs> {{dirC.vchCodigoPostal}}</td>
+                                    <td class="text-center" show-gt-xs hide-xs> {{dirC.vchMunicipio}}</td>
+                                    <td class="text-center" show-gt-xs hide-xs> {{dirC.vchEstado}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

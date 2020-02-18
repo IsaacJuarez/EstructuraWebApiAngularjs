@@ -1,0 +1,64 @@
+﻿<md-dialog aria-label="Agregar Usuario">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Agregar Producto</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h2>Agregar un producto</h2>
+                <p style="margin-bottom:20px;">Complete la siguiente información para agregar un nuevo producto:</p>
+                <ng-form layout="column" name="FormularioProducto" layout-padding class="panel-group">
+                    <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                        <div layout="column" layout-align="start stretch" class="panel-body">
+                            <md-input-container>
+                                <label>Linea</label>
+                                <md-select ng-model="producto.intLineaProdID" [width]="'100%'" name="intLineaProdID" ng-change="FiltrarProductos(producto.intLineaProdID)">
+                                    <md-option ng-repeat="linea in lineas" ng-value="linea.intLineaProdID">
+                                        {{linea.vchLinea}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                            <md-autocomplete md-selected-item="ProductSelected" required
+                                             md-selected-item-change="selectedItemChange(prod)"
+                                             md-search-text="searchText"
+                                             md-items="prod in querySearch(searchText)"
+                                             md-item-text="prod.vchNombreProducto"
+                                             placeholder="Productos"
+                                             md-no-cache="true">
+                                <md-item-template>
+                                    <span md-highlight-text="searchText" md-highlight-flags="^i">{{prod.vchNombreProducto}}</span>
+                                </md-item-template>
+                                <md-not-found>
+                                    No existen coincidencias con "{{searchText}}".
+                                </md-not-found>
+                            </md-autocomplete>
+                            <br />
+                            <md-input-container>
+                                <label>Cantidad</label>
+                                <input type="number" name="intCantidad" ng-model="producto.intCantidad" required />
+                                <div ng-messages="FormularioProducto.intCantidad.$error" ng-if="FormularioProducto.intCantidad.$touched">
+                                    <div ng-message="required">Necesita indicar la cantidad</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+            <md-button class="md-raised md-primary" ng-disabled="loading || FormularioProducto.$invalid" ng-click="AgregarProducto(producto, $event)">
+                Agregar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -1,0 +1,42 @@
+﻿<md-dialog aria-label="Agregar Evento">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Consultor asignado para seguimiento</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-close fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h2>Consultor asignado</h2>
+                <p style="margin-bottom:20px;">Complete la siguiente información para asignar un nuevo consultor:</p>
+                <ng-form layout="column" name="FormularioProspecto" layout-padding class="panel-group">
+                    <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                        <div layout="column" layout-align="start stretch" class="panel-body">
+                            <md-input-container flex>
+                                <label>Consultor asignado</label>
+                                <md-select flex [width]="'100%'" ng-model="prospecto.intUsuarioSeguimiento" name="intUsuarioSeguimiento" required>
+                                    <md-option ng-repeat="agente in agentes" ng-value="agente.intUsuarioID">
+                                        {{agente.vchNombre}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+            <md-button class="md-raised md-primary" ng-disabled="loading || FormularioProspecto.$invalid" ng-click="ActualizarUserSeguimiento(prospecto, $event)">
+                Guardar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

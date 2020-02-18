@@ -1,0 +1,119 @@
+﻿<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.0.3/css/bootstrap.min.css" />
+<md-content layout="row" layout-align="center" ng-cloak>
+    <md-card flex-xs="100" flex-gt-xs="100" flex-gt-sm="100">
+        <md-toolbar md-scroll-shrink>
+            <div class="md-toolbar-tools">
+                <md-menu ng-if="AccessAddLeads">
+                    <md-button aria-label="menuAdministracionEventos" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                        <md-icon md-menu-origin class="fas fa-bars fa-2x"></md-icon>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button ng-if="AccessAddLeads" ng-click="AgregarEvento($event)" ng-disabled="loading">
+                                <md-icon md-menu-align-target class="fas fa-plus fa-2x"></md-icon>
+                                Agregar evento
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+                <h2 flex md-truncate>
+                    <span>Administración de Eventos</span>
+                </h2>
+            </div>
+        </md-toolbar>
+        <md-progress-linear class="md-warn" md-mode="indeterminate" ng-if="loading"></md-progress-linear>
+        <md-card-title style="background: url('app/assets/FFM.png') ; background-size: cover;">
+            <md-card-title-text>
+                <div style="background-color: rgba(255, 255, 255, 0.4);" layout="column" layout-align="space-around stretch">
+                    <!--Pantalla modo PC-->
+                    <div layout="column" layout-align="space-around stretch">
+                        <section ng-init="loadEvents()">
+                            <div class="btn-toolbar">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default" ng-class="{active:mode==='month'}"
+                                            ng-click="changeMode('month')">
+                                        Mes
+                                    </button>
+                                    <button type="button" class="btn btn-default" ng-class="{active:mode==='week'}"
+                                            ng-click="changeMode('week')">
+                                        Semana
+                                    </button>
+                                    <button type="button" class="btn btn-default" ng-class="{active:mode==='day'}"
+                                            ng-click="changeMode('day')">
+                                        Día
+                                    </button>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default" ng-disabled="isToday()"
+                                            ng-click="today()">
+                                        hoy
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="well well-sm">
+                                <calendar ng-model="currentDate" calendar-mode="mode" event-source="eventSource"
+                                          range-changed="reloadSource(startTime, endTime)"
+                                          event-selected="onEventSelected(event)"
+                                          time-selected="onTimeSelected(selectedTime, events)" step="30"></calendar>
+                            </div>
+                            <div class="alert alert-success" ng-show="event" layout="row">
+                                <div style="margin: -5px -5px -15px -5px">
+                                    <md-menu>
+                                        <md-button aria-label="menuFactura" class="md-icon-button" ng-click="abrirMenu($mdOpenMenu, $event)">
+                                            <md-icon md-menu-origin class="fas fa-bars fa-lg"></md-icon>
+                                        </md-button>
+                                        <md-menu-content>
+                                            <md-menu-item ng-if="AccessAddLeads">
+                                                <md-button ng-click="ModificarEvento($event, event)">
+                                                    <md-icon class="fas fa-pencil-alt fa-lg"></md-icon>
+                                                    Modificar evento
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item ng-if="AccessAddLeads">
+                                                <md-button ng-click="PromocionesEvento($event, event)">
+                                                    <md-icon class="fas fa-tags"></md-icon>
+                                                    Promociones
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item>
+                                                <md-button ng-click="VerEvento($event, event)">
+                                                    <md-icon class="fas fa-angle-right fa-lg"></md-icon>
+                                                    Ver evento
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item>
+                                                <md-button ng-click="RegistroAsitentes($event, event)">
+                                                    <md-icon class="fas fa-user-plus fa-lg"></md-icon>
+                                                    Registro de Prospectos
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item ng-if="AccessEstLead">
+                                                <md-button ng-click="EstidisticasEventos($event, event)">
+                                                    <md-icon class="fas fa-chart-pie fa-lg"></md-icon>
+                                                    Estadísticas
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item ng-if="AccessLeads">
+                                                <md-button ng-show='evento.bitActive' ng-click="EliminarEvento($event, event)">
+                                                    <md-icon class="fas fa-times fa-lg"></md-icon>
+                                                    Desactivar
+                                                </md-button>
+                                                <md-button ng-show='!evento.bitActive' ng-click="EliminarProducto($event, event)">
+                                                    <md-icon class="fas fa-check fa-lg"></md-icon>
+                                                    Activar
+                                                </md-button>
+                                            </md-menu-item>
+                                        </md-menu-content>
+                                    </md-menu>
+                                </div>
+                                <div>
+                                    Evento Seleccionado:{{event.startTime|date}} - {{event.endTime|date}}, {{event.title}}
+                                </div>
+                            </div>
+                        </section>                        
+                    </div>
+                </div>
+            </md-card-title-text>
+        </md-card-title>
+    </md-card>
+</md-content>

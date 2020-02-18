@@ -1,0 +1,52 @@
+﻿<md-dialog aria-label="Agregar Evento">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Estadísticas </h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-close fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h2>Estadísticas generales de {{event.vchNombre}}</h2>
+                <ng-form layout="column" name="FormularioEvento" layout-padding class="panel-group">
+                    <div flex>
+                        <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                            <div class="md-toolbar-tools">
+                                <h2>Prospectos por consultor </h2>
+                            </div>
+                            <canvas id="bar" class="chart chart-bar" chart-data="dataA" chart-labels="labelsA" chart-series="series"></canvas>
+                        </div>
+                        <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                            <div class="md-toolbar-tools">
+                                <h2>Productos por Evento </h2>
+                            </div>
+                            <canvas id="doughnut" class="chart chart-doughnut" chart-data="data2" chart-labels="labels2"></canvas>
+                        </div>
+                    </div>
+                    <!--<div flex layout="column" class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                        <md-toolbar>
+                            <div class="md-toolbar-tools">
+                                <h2>Adicionales</h2>
+                            </div>
+                        </md-toolbar>
+                        <md-dialog-content>
+                            <ul>
+                                <li ng-repeat="adi in lstAdi">{{adi.vchAdicionales}}</li>
+                            </ul>
+                        </md-dialog-content>
+                    </div>-->
+                </ng-form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

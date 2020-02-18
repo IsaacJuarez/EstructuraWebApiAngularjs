@@ -1,0 +1,142 @@
+﻿<md-dialog aria-label="Editar Producto">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Precios de {{producto.vchNombreProducto}}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <h2>
+                <small>Editar los precios del producto</small>
+            </h2>
+            <div layout="row" layout-align="space-between start" class="md-dialog-content">
+                <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                    <div flex layout="column" layout-align="start stretch" class="panel-body">
+                        <ng-form layout="column" name="FormularioPrecio">
+                            <div class="panel" layout="column" layout-align="start stretch" flex="">
+                                <md-input-container>
+                                    <label>Línea de productos</label>
+                                    <md-select ng-model="intMonedaID" name="intMonedaID" required>
+                                        <md-option ng-repeat="moneda in monedas" ng-value="moneda.intMonedaID">
+                                            {{moneda.vchMoneda}}
+                                        </md-option>
+                                    </md-select>
+                                    <div ng-messages="FormularioPrecio.intMonedaID.$error" ng-if="FormularioPrecio.intMonedaID.$touched">
+                                        <div ng-message="required">Necesitas seleccionar la moneda.</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                            <div class="panel-body">
+                                <div id="Precios_header" layout="row" layout-align="start center" layout-padding>
+                                    <div flex style="min-width:100px;" class="text-center"><span><strong>Nombre del Precio</strong></span></div>
+                                    <div flex style="min-width:150px;"><span><strong>Precio</strong></span></div>
+                                </div>
+                                <div id="Precios_body" layout="column" ng-repeat="detalle in detalles">
+                                    <div layout="row" layout-align="start center" style="padding-top:2px; padding-bottom:2px; margin-top:0; margin-bottom:0; border-color:#e4e4e4; border-style: solid; border-width: 1px 0 0 0;">
+                                        <div flex style="min-width:100px;" class="text-center">
+                                            <strong>{{detalle.vchNombrePrecio}}</strong>
+                                        </div>
+                                        <div flex style="min-width:150px;">
+                                            <md-input-container style="margin: 0px 0 !important;">
+                                                <input type="number" name="decPrecio" ng-model="detalle.decPrecio" min="0.00" step="0.01" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" aria-label="lbl{{detalle.intTipoPrecio}}" />
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-form>
+                    </div>
+                </div>
+            </div>
+            <!--<div layout="row" layout-align="space-between start" class="md-dialog-content">
+                <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                    <div flex layout="column" layout-align="start stretch" class="panel-body">
+                        <div>
+                            <label>Precio de Lista: <small> $ {{producto.decCostoUnitario| number : 2}}</small></label>
+                        </div>
+                        <ng-form layout="column" name="FormularioPrecio" layout-padding>
+                            <md-input-container>
+                                <label>Nombre</label>
+                                <input type="text" name="vchNombrePrecio" ng-model="precio.vchNombrePrecio" required />
+                                <div ng-messages="FormularioPrecio.vchNombrePrecio.$error" ng-if="FormularioPrecio.vchNombrePrecio.$touched">
+                                    <div ng-message="required">Necesita indicar el nombre</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Costo Unitario</label>
+                                <input type="number" name="decPrecio" ng-model="precio.decPrecio" step="0.01" min="0.01" required />
+                                <div ng-messages="FormularioPrecio.decPrecio.$error" ng-if="FormularioPrecio.decPrecio.$touched">
+                                    <div ng-message="required">Necesita indicar precio</div>
+                                </div>
+                            </md-input-container>
+                            <div>
+                                <md-checkbox ng-model="precio.bitSolicitarAutorizacion" aria-label="SolAutoLabel">
+                                    Solicitar Autorización
+                                </md-checkbox>
+                            </div>
+                            <div layout="row" layout-align="end">
+                                <md-button class="md-raised md-primary" ng-disabled="loading || FormularioPrecio.$invalid" ng-click="AgregarPrecio($event, precio)">
+                                    Agregar
+                                </md-button>
+                            </div>
+                        </ng-form>
+                    </div>
+                </div>
+                <div flex layout="column" layout-align="space-around stretch">
+                    <table class="table table-sm table-hover" layout-padding>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="text-left">Precios</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="price in precios">
+                                <td class="text-center">
+                                    <md-button ng-click="EliminarPrice($event, price)" ng-if="price.bitActive && !price.bitEdit" aria-label="QuitarPrecio">
+                                        <md-icon class="fas fa-times fa-lg" title="Quitar"></md-icon>
+                                    </md-button>
+                                    <md-button ng-click="EditarPrecio($event, price)" ng-if="price.bitActive&& !price.bitEdit" aria-label="EditarPrecio">
+                                        <md-icon class="fas fa-pencil-alt fa-lg" title="Editar"></md-icon>
+                                    </md-button>
+                                    <md-button ng-click="SavePrice($event, price)" ng-if="price.bitActive && price.bitEdit" aria-label="GuardarPrecio">
+                                        <md-icon class="fas fa-save fa-lg" title="Guardar"></md-icon>
+                                    </md-button>
+                                    <md-button ng-click="CancelPrice($event, price)" ng-if="price.bitActive && price.bitEdit" aria-label="CancelarPrecio">
+                                        <md-icon class="fas fa-ban fa-lg" title="Cancelar"></md-icon>
+                                    </md-button>
+                                </td>
+                                <td class="text-left">
+                                    <div  ng-if="price.bitActive && !price.bitEdit">{{price.vchNombrePrecio}} : $ {{price.decPrecio | number : 2}}</div>
+                                    <div ng-if="price.bitActive && price.bitEdit">
+                                        <md-input-container>
+                                            <label>Nombre</label>
+                                            <input type="text" name="price.vchNombrePrecio" ng-model="price.vchNombrePrecio" required />
+                                        </md-input-container>
+                                        <md-input-container>
+                                            <label>Costo Unitario</label>
+                                            <input type="number" name="price.decPrecio" ng-model="price.decPrecio" step="0.01" min="0.01" required />
+                                        </md-input-container>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>-->
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+            <md-button class="md-raised md-primary" ng-disabled="loading || FormularioPrecio.$invalid" ng-click="GuardarPrecios($event)">
+                Guardar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

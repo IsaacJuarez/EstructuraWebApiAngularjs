@@ -1,0 +1,82 @@
+﻿<md-dialog aria-label="Agregar Evento">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Registrar asistente</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-close fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h2>Agregar un prospecto</h2>
+                <p style="margin-bottom:20px;">Complete la siguiente información para agregar un nuevo prospecto:</p>
+                <ng-form layout="column" name="FormularioProspecto" layout-padding class="panel-group">
+                    <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                        <div layout="column" layout-align="start stretch" class="panel-body">
+                            <md-input-container>
+                                <label>Nombre</label>
+                                <input type="text" name="vchNombreCliente" ng-model="prospecto.vchNombreCliente" required />
+                                <div ng-messages="FormularioProspecto.vchNombreCliente.$error" ng-if="FormularioProspecto.vchNombreCliente.$touched">
+                                    <div ng-message="required">Necesita indicar el nombre de la persona</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Email</label>
+                                <input type="email" name="vchEmailCliente" ng-model="prospecto.vchEmailCliente" required />
+                                <div ng-messages="FormularioProspecto.vchEmailCliente.$error" ng-if="FormularioProspecto.vchEmailCliente.$touched">
+                                    <div ng-message="required">Necesita indicar el email</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Teléfono</label>
+                                <input type="text" name="vchTelefono" ng-model="prospecto.vchTelefono" required />
+                                <div ng-messages="FormularioProspecto.vchTelefono.$error" ng-if="FormularioProspecto.vchTelefono.$touched">
+                                    <div ng-message="required">Necesita indicar el teléfono</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container flex>
+                                <label>Estado</label>
+                                <md-select flex [width]="'100%'" ng-model="prospecto.intEstadoID" name="intEstadoID" required>
+                                    <md-option ng-repeat="estado in Estados" ng-value="estado.intEstadoID">
+                                        {{estado.vchEstado}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                            <div flex>
+                                <md-chips ng-model="Obs.selectedObs" md-autocomplete-snap md-transform-chip="Obs.transformChip($chip)" md-require-match="Obs.autocompleteDemoRequireMatch">
+                                    <md-autocomplete class="cajasdetexto" md-selected-item="Obs.selectedItem" md-search-text="Obs.searchText" md-items="item in Obs.querySearch(Obs.searchText)" md-item-text="item.intProductoID" placeholder="Producto de interés.">
+                                        <span md-highlight-text="Obs.searchText">{{item.vchNombreProducto}}</span>
+                                    </md-autocomplete>
+                                    <md-chip-template>
+                                        <span>
+                                            <!--<strong>{{$chip.intProductoID}}</strong>-->
+
+                                            <em>{{$chip.vchNombreProducto}}</em>
+                                        </span>
+                                    </md-chip-template>
+                                </md-chips>
+                            </div>
+                            <br />
+                            <md-input-container>
+                                <label>Adicionales</label>
+                                <textarea flex type="text" name="vchAdicionales" ng-model="prospecto.vchAdicionales" rows="5" />
+                            </md-input-container>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+            <md-button class="md-raised md-primary" ng-disabled="loading || FormularioProspecto.$invalid" ng-click="AgregarProspecto(prospecto, $event)">
+                Agregar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

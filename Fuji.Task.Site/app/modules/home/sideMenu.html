@@ -1,0 +1,175 @@
+﻿<nav id="sidebar" ng-controller="homeController">
+    <div class="sidebar-header">
+        <h4>Servicios internos</h4>
+    </div>
+    <ul class="list-unstyled components">
+        <li>
+            <a href="#homeSubmenu" target="_self" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <ul class="collapse list-unstyled" id="homeSubmenu">
+                <li>
+                    <a href="#/">Dashboard</a>
+                </li>
+                <li>
+                    <a href="#/home/viajes">Mis viajes</a>
+                </li>
+                <li ng-if="IsAccessAllowed('/home/clientes')">
+                    <a href="#/home/clientes">Mis clientes</a>
+                </li>
+                <li ng-if="Globals.CurrentUser.TieneAutoAsignado">
+                    <a href="#/home/auto">Mi auto</a>
+                </li>
+                <li>
+                    <a href="#/home/usuario">Mi usuario</a>
+                </li>
+            </ul>
+        </li>
+        <li ng-if="Globals.CurrentUser.EsAutorizador">
+            <a href="#autorizadorSubmenu" target="_self" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-magic"></i>
+                Autorizador
+            </a>
+            <ul class="collapse list-unstyled" id="autorizadorSubmenu">
+                <li>
+                    <a href="#/autorizador/viajes">Viajes</a>
+                </li>
+                <li>
+                    <a href="#/autorizador/anticipos">Anticipos</a>
+                </li>
+                <li>
+                    <a href="#/autorizador/comprobantes">Comprobantes</a>
+                </li>
+            </ul>
+        </li>
+        <li ng-if="IsAccessAllowed('/api/credito')">
+            <a href="#creditoSubmenu" target="_self" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-funnel-dollar"></i>
+                Crédito
+            </a>
+            <ul class="collapse list-unstyled" id="creditoSubmenu">
+                <li>
+                    <a href="#solicitudesSubmenu" target="_self" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fas fa-book"></i>
+                        Solicitudes
+                    </a>
+                    <ul class="collapse list-unstyled" id="solicitudesSubmenu">
+                        <li>
+                            <a href="#/credito/solicitudes/clientes" style="font-size:medium !important;">
+                                <i></i>
+                                &#9656; Nuevos clientes
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li ng-if="IsAccessAllowed('/credito/ejecutivos')">
+                    <a href="#/credito/ejecutivos" style="font-size:medium !important;">
+                        <i class="fas fa-users"></i> Ejecutivos
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li ng-if="IsAccessAllowed('/api/contabilidad')">
+            <a href="#contabilidadSubmenu" target="_self" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-tasks"></i>
+                Contabilidad
+            </a>
+            <ul class="collapse list-unstyled" id="contabilidadSubmenu">
+                <li>
+                    <a href="#viaticosSubmenu" target="_self" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="fas fa-plane"></i>
+                        Viáticos
+                    </a>
+                    <ul class="collapse list-unstyled" id="viaticosSubmenu">
+                        <li>
+                            <a href="#/contabilidad/viaticos/politicas" style="font-size:medium !important;">
+                                <i></i>
+                                &#9656; Políticas
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#/contabilidad/viaticos/anticipos" style="font-size:medium !important;">
+                                <i></i>
+                                &#9656; Anticipos
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#/contabilidad/viaticos/comprobaciones" style="font-size:medium !important;">
+                                <i></i>
+                                &#9656; Comprobaciones
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#/contabilidad/viaticos/monitor" style="font-size:medium !important;">
+                                <i></i>
+                                &#9656; Monitor
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#/contabilidad/autos">
+                        <i class="fas fa-car"></i>
+                        Autos
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li ng-if="IsAccessAllowed('/api/catalogos')">
+            <a href="#catalogosSubmenu" target="_self" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-database"></i>
+                Catálogos
+            </a>
+            <ul class="collapse list-unstyled" id="catalogosSubmenu">
+                <li ng-if="IsAccessAllowed('/catalogos/autos')">
+                    <a href="#/catalogos/autos">Autos</a>
+                </li>
+                <li ng-if="IsAccessAllowed('/catalogos/SAT')">
+                    <a href="#/catalogos/SAT">SAT</a>
+                </li>
+                <li ng-if="IsAccessAllowed('/catalogos/sepomex')">
+                    <a href="#/catalogos/sepomex">Sepomex</a>
+                </li>
+                <li ng-if="IsAccessAllowed('/catalogos/sap')">
+                    <a href="#/catalogos/sap">SAP</a>
+                </li>
+                <li ng-if="IsAccessAllowed('/catalogos/efos')">
+                    <a href="#/catalogos/efos">EFOS</a>
+                </li>
+            </ul>
+        </li>
+        <li ng-if="IsAccessAllowed('/api/reportes')">
+            <a href="#/reportes">
+                <i class="fas fa-scroll"></i>
+                Reportes
+            </a>
+        </li>
+        <li ng-if="IsAccessAllowed('/api/seguridad')">
+            <a href="#seguridadSubmenu" target="_self" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                <i class="fas fa-shield-alt"></i>
+                Seguridad
+            </a>
+            <ul class="collapse list-unstyled" id="seguridadSubmenu">
+                <li ng-if="IsAccessAllowed('/seguridad/usuarios')">
+                    <a href="#/seguridad/usuarios">Usuarios</a>
+                </li>
+                <li ng-if="IsAccessAllowed('/seguridad/perfiles')">
+                    <a href="#/seguridad/perfiles">Perfiles</a>
+                </li>
+                <li ng-if="IsAccessAllowed('/seguridad/rutas')">
+                    <a href="#/seguridad/rutas">Accesos</a>
+                </li>
+                <li ng-if="IsAccessAllowed('/seguridad/erp')">
+                    <a href="#/seguridad/erp">ERP</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#/login">
+                <i class="fas fa-sign-out-alt"></i>
+                Salir
+            </a>
+        </li>
+    </ul>
+</nav>

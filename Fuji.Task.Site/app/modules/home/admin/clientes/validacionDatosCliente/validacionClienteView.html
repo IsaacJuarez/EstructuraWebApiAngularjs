@@ -1,0 +1,150 @@
+﻿<md-dialog aria-label="Subir comprobante">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Validación de datos del Cliente</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <h2>{{Cliente.vchNombre}}</h2>
+            <p style="margin-bottom:20px;">Favor de validar la información del cliente para actualizar:</p>
+            <div>
+                <ng-form name="DocForm" layout="column">
+                    <div flex layout="column" layout-align="start stretch" class="panel-body">
+                        <div flex layout="row" layout-align="space-between start" layout-sm="column" layout-align-sm="start stretch">
+                            <md-input-container flex ng-show="cliente.intTipoClienteID == 2">
+                                <label>Razón Social</label>
+                                <input type="text" name="vchNombreEmpresa" ng-model="cliente.vchNombreEmpresa" readonly/>
+                            </md-input-container>
+                            <md-input-container flex>
+                                <label ng-show="cliente.intTipoClienteID == 2">En atención a</label><label ng-show="cliente.intTipoClienteID == 1">Nombre cliente</label>
+                                <input type="text" name="vchNombre" ng-model="cliente.vchNombre" readonly />
+                            </md-input-container>
+                        </div>
+                        <div flex layout="row" layout-align="space-between start" layout-sm="column" layout-align-sm="start stretch" ng-show="cliente.intTipoClienteID == 1">
+                            <md-input-container flex>
+                                <label>Fecha de Nacimiento</label>
+                                <md-datepicker ng-model="cliente.datFechaNacimiento" md-placeholder="Fecha de Nacimiento" readonly></md-datepicker>
+                            </md-input-container>
+                            <md-input-container flex>
+                                <label>Pais de Nacimiento</label>
+                                <input type="text" name="vchPais" ng-model="cliente.vchPais" readonly />
+                            </md-input-container>
+                        </div>
+                        <div flex layout="row" layout-align="space-between start" layout-sm="column" layout-align-sm="start stretch">
+                            <md-input-container flex>
+                                <label>RFC</label>
+                                <input type="text" name="vchRFC" ng-model="cliente.vchRFC" readonly ng-blur="validarRFC(cliente.vchRFC)" />
+                                <span ng-show="valid" class="md-input-invalid md-input-message-animation">Formato de RFC no es válido.</span>
+                            </md-input-container>
+                            <md-input-container ng-if="cliente.intTipoClienteID == 2" flex>
+                                <label>Giro de la empresa</label>
+                                <input type="text" name="vchGiroEmpresa" ng-model="cliente.vchGiroEmpresa" readonly/>
+                            </md-input-container>
+                            <md-input-container ng-if="cliente.intTipoClienteID == 1" flex>
+                                <label>CURP {{cliente.intTipoClienteID}}</label>
+                                <input type="text" name="vchCURP" ng-model="cliente.vchCURP" readonly />
+                            </md-input-container>
+                        </div>
+                        <div flex layout="row" layout-align="space-between start" layout-sm="column" layout-align-sm="start stretch" ng-if="cliente.intTipoClienteID == 1">
+                            <md-input-container flex>
+                                <label>Ocupacion</label>
+                                <input type="text" name="vchOcupacion" ng-model="cliente.vchOcupacion" ng-required="cliente.intTipoClienteID == 1" />
+                                <div ng-messages="FormularioCliente.vchOcupacion.$error" ng-if="FormularioCliente.vchOcupacion.$touched">
+                                    <div ng-message="required">Necesita indicar la ocupación del cliente</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container flex ng-show="cliente.intTipoClienteID == 1">
+                                <label>Nacionalidad</label>
+                                <input type="text" name="vchNacionalidad" ng-model="cliente.vchNacionalidad" readonly />
+                            </md-input-container>
+                        </div>
+                        <div flex layout="row" layout-align="space-between start" layout-sm="column" layout-align-sm="start stretch">
+                            <md-input-container flex>
+                                <label>Email</label>
+                                <input type="email" name="vchEmail" ng-model="cliente.vchEmail" readonly" />
+                            </md-input-container>
+                            <md-input-container flex>
+                                <label>Teléfono</label>
+                                <input type="text" name="vchTelefono" ng-model="cliente.vchTelefono" readonly />
+                            </md-input-container>
+                        </div>
+                        <div flex layout="row" layout-align="space-between start" layout-sm="column" layout-align-sm="start stretch">
+                            <md-input-container flex>
+                                <label>Fax</label>
+                                <input type="text" name="vchFax" ng-model="cliente.vchFax" readonly />
+                            </md-input-container>
+                            <md-input-container flex>
+                                <label>No. de serie de Firma Electrónica Avanzada</label>
+                                <input type="text" name="vchNumSerieFirElec" ng-model="cliente.vchNumSerieFirElec" readonly />
+                            </md-input-container>
+                        </div>
+                        <h3>Dirección Fiscal</h3>
+                        <div flex layout="row" layout-align="space-between start">
+                            <md-input-container flex>
+                                <label>Código Postal</label>
+                                <input type="text" name="vchCodigoPostal" ng-model="cliente.vchCodigoPostal" pattern="^[0-9]+$" ng-pattern-restrict ng-required="CompletarDatos" ng-blur="CodigoPostal(direccion.vchCodigoPostal)" readonly/>
+                            </md-input-container>
+                            <md-input-container flex>
+                                <label>Poblacion</label>
+                                <input type="text" name="vchPoblacion" ng-model="cliente.vchPoblacion" readonly />
+                            </md-input-container>
+                        </div>
+                        <div flex layout="row" layout-align="space-between start">
+                            <md-input-container flex>
+                                <label>Calle y Numero</label>
+                                <input flex type="text" name="vchCalleYNum" ng-model="cliente.vchCalleYNum" readonly />
+                            </md-input-container>
+                            <md-input-container flex>
+                                <label>Colonia</label>
+                                <input flex type="text" name="vchColonia" ng-model="cliente.vchColonia" readonly/>
+                            </md-input-container>
+                        </div>
+                        <div flex layout="row" layout-align="space-between start">
+                            <md-input-container flex>
+                                <label>Estado</label>
+                                <input type="text" name="vchEstado" ng-model="cliente.vchEstado" readonly />
+                            </md-input-container>
+                            <md-input-container flex>
+                                <label>Municipio</label>
+                                <input type="text" name="vchMunicipio" ng-model="cliente.vchMunicipio" readonly />
+                            </md-input-container>
+                        </div>
+                        <div flex layout="column" ng-if="cliente.tbl_DET_Contacto.length > 0">
+                            <span>Contactos</span>
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <td>Nombre</td>
+                                        <td>Puesto</td>
+                                        <td>Teléfono</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="contacto in cliente.tbl_DET_Contacto">
+                                        <td>{{contacto.vchNombre}}</td>
+                                        <td>{{contacto.vchPuesto}}</td>
+                                        <td>{{contacto.vchTelefono}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="cancel()" ng-disabled="Loading">
+            Cancelar
+        </md-button>
+        <md-button class="md-raised md-primary" ng-click="AceptarCliente(cliente, $event)" ng-disabled="Loading">
+            Aceptar Datos
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

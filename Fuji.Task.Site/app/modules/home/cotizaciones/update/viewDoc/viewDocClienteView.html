@@ -1,0 +1,28 @@
+﻿<md-dialog aria-label="Vista Previa del Reporte">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Documento {{documento.vchDocumento}}</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+    <md-dialog-content>
+        <div id="wrappermodal" flex layout="row" layout-align="center stretch" hide-sm hide-xs show-gt-sm>
+            <div class="parent" layout="column" flex>
+                <md-card class="card">
+                    <iframe id="iFrame" ng-src="{{vchImagenPath}}" style="border: 0; min-width: 500px; min-height: 600px;"></iframe>
+                </md-card>
+            </div>
+        </div>
+        <div id="wrapperlarge" layout="row" layout-align="stretch" show-sm hide-gt-sm>
+            <div class="parent" layout="column" flex>
+                <md-card class="card">
+                    <iframe id="iFrame" ng-src="{{vchImagenPath}}" frameborder="0" scrolling="no" onload="resizeIframe(this)" style="width:100%;"></iframe>
+                </md-card>
+            </div>
+        </div>
+    </md-dialog-content>
+</md-dialog>

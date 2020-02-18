@@ -1,0 +1,148 @@
+<md-content layout="row" layout-align="center" ng-cloak>
+    <md-card flex-xs="100" flex-gt-xs="100" flex-gt-sm="100">
+        <md-toolbar md-scroll-shrink>
+            <div class="md-toolbar-tools">
+                <md-menu>
+                    <md-button aria-label="menuAdministracionUsuarios" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                        <md-icon md-menu-origin class="fas fa-bars fa-2x"></md-icon>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button ng-click="AgregarUsuario($event)" ng-disabled="loading">
+                                <md-icon md-menu-align-target class="fas fa-plus fa-2x"></md-icon>
+                                Agregar usuario
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+                <h2 flex md-truncate>
+                    <span>Administración de usuarios</span>
+                </h2>
+                <md-button ng-click="toggleRight()" ng-hide="isOpenRight()" ng-disabled="loading" aria-label="btnBuscar">
+                    <md-icon md-menu-align-target class="fas fa-search fa-2x"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear class="md-warn" md-mode="indeterminate" ng-if="loading"></md-progress-linear>
+        <md-card-title style="background: url('app/assets/FFM.png') ; background-size: cover;">
+            <md-card-title-text>
+                <div style="background-color: rgba(255, 255, 255, 0.4);" layout="column" layout-align="space-around stretch">
+                    <md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
+                        <md-toolbar class="md-theme-light">
+                            <h1 class="md-toolbar-tools">Buscar usuario</h1>
+                        </md-toolbar>
+                        <md-content layout-padding>
+                            <form ng-submit="BuscarUsuario($event, busqueda)" layout="column">
+                                <md-input-container>
+                                    <label for="testInput">Nombre del usuario</label>
+                                    <input type="text" ng-model="busqueda.nombre" md-autofocus name="nombre">
+                                </md-input-container>
+                                <md-input-container>
+                                    <label>Perfiles</label>
+                                    <md-select ng-model="busqueda.intTipoUsuarioID" name="Perfil">
+                                        <md-option ng-repeat="perfil in perfiles" ng-value="perfil.intTipoUsuarioID">
+                                            {{perfil.vchTipoUsuario}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </form>
+                            <md-button ng-click="BuscarUsuario($event, busqueda)" class="md-primary" type="submit">
+                                Buscar
+                            </md-button>
+                        </md-content>
+                    </md-sidenav>
+                    <!--Pantalla modo PC-->
+                    <div layout="column" layout-align="space-around stretch">
+                        <table class="table table-sm table-hover" layout-padding>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th class="text-left">Nombre</th>
+                                    <th class="text-left">Usuario</th>
+                                    <th class="text-left">Email</th>
+                                    <th class="text-left" show-gt-xs hide-xs>Perfil</th>
+                                    <th class="text-left" show-gt-xs hide-xs>Tipo Venta</th>
+                                    <th class="text-left" show-gt-xs hide-xs>Fecha creación</th>
+                                    <th class="text-left" show-gt-xs hide-xs>Activo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="usuario in pagedItems[currentPage]">
+                                    <td class="text-center">
+                                        <div style="margin: -5px -5px -15px -5px">
+                                            <md-menu>
+                                                <md-button aria-label="menuFactura" class="md-icon-button" ng-click="abrirMenu($mdOpenMenu, $event)">
+                                                    <md-icon md-menu-origin class="fas fa-bars fa-lg"></md-icon>
+                                                </md-button>
+                                                <md-menu-content>
+                                                    <md-menu-item>
+                                                        <md-button ng-click="ModificarUsuario($event, usuario)">
+                                                            <md-icon class="fas fa-pencil-alt fa-lg"></md-icon>
+                                                            Modificar usuario
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button ng-click="ModificarAutorizadores($event, usuario)">
+                                                            <md-icon class="fas fa-key  fa-lg"></md-icon>
+                                                            Autorizadores
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button ng-click="ModificarAccesos($event, usuario)">
+                                                            <md-icon class="fas fa-user-shield fa-lg"></md-icon>
+                                                            Accesos y Permisos
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button ng-show='usuario.bitActive' ng-click="EliminarUsuario($event, usuario)">
+                                                            <md-icon class="fas fa-times fa-lg"></md-icon>
+                                                            Desactivar
+                                                        </md-button>
+                                                        <md-button ng-show='!usuario.bitActive' ng-click="EliminarUsuario($event, usuario)">
+                                                            <md-icon class="fas fa-check fa-lg"></md-icon>
+                                                            Activar
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
+                                        </div>
+                                    </td>
+                                    <td class="text-left"> {{usuario.vchNombre}}</td>
+                                    <td class="text-left"> {{usuario.vchUsuario}}</td>
+                                    <td class="text-left"> {{usuario.vchEmail}}</td>
+                                    <td class="text-left" show-gt-xs hide-xs> {{usuario.vchTipoUsuario}}</td>
+                                    <td class="text-left" show-gt-xs hide-xs> {{usuario.vchTipoVenta}}</td>
+                                    <td class="text-left" show-gt-xs hide-xs> {{usuario.datFecha | date}}</td>
+                                    <td>
+                                        <span ng-show='usuario.bitActivo'><i class="fas fa-check red" style="color:green"></i></span>
+                                        <span ng-show='!usuario.bitActivo'><i class="fas fa-times green" style="color:red"></i></span>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="9">
+                                        <div class="text-center">
+                                            <ul class="pagination">
+                                                <li ng-class="{disabled: currentPage == 0}">
+                                                    <a href="javascript:;" ng-click="prevPage()">« Prev</a>
+                                                </li>
+                                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()" style="color: #4CAF50 !important;">
+                                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                                </li>
+                                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                                    <a href="javascript:;" ng-click="nextPage()">Next »</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </md-card-title-text>
+        </md-card-title>
+    </md-card>
+</md-content>

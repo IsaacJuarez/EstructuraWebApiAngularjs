@@ -1,0 +1,44 @@
+﻿<md-dialog aria-label="Agregar Usuario">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Código SAP </h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <p style="margin-bottom:20px;">Modificar el código SAP una vez registrado.</p>
+                <ng-form layout="column" name="FormularioCliente" layout-padding class="panel-group">
+                    <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                        <div layout="row" layout-sm="column" layout-align="start stretch" class="panel-body">
+                            <div flex layout="column" layout-align="start stretch" class="panel-body">
+                                <span>{{cliente.vchNombre}}</span>
+                                <br />
+                                <md-input-container>
+                                    <label>Id del Cliente</label>
+                                    <input type="text" name="vchClienteID" ng-model="cliente.vchClienteID" required />
+                                    <div ng-messages="FormularioCliente.vchClienteID.$error" ng-if="FormularioCliente.vchClienteID.$touched">
+                                        <div ng-message="required">Necesita indicar el código SAP del cliente</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+            <md-button class="md-raised md-primary" ng-disabled="loading || FormularioCliente.$invalid " ng-click="ModificarCodigoSAP(cliente, $event)">
+                Guardar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

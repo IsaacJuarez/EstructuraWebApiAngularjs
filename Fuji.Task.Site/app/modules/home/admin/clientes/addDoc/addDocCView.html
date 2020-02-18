@@ -1,0 +1,58 @@
+﻿<md-dialog aria-label="Subir comprobante">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Documento</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <h2>{{Documento.vchDocumento}}</h2>
+            <p style="margin-bottom:20px;">Subir documento:</p>
+            <div>
+                <ng-form name="DocForm" layout="column">
+                    <div layout="row" layout-align="center center" ng-show="Documento.intDocClienteID < 9">
+                        <div layout="column">
+                            <label for="file-pdf" ng-style="LabelImagen" style="border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer;">
+                                <i ng-class="ImagenProd.name.length > 0 ? 'fas fa-check' : 'fas fa-cloud-upload-alt'"></i><span style="margin-left:10px;">Cargar archivo</span>
+                            </label>
+                            <p style="margin-left:2px; font-size:10px;" ng-if="ImagenProd.name.length > 0">{{ImagenProd.name}}</p>
+                        </div>
+                        <input id="file-pdf" type="file" accept=".png,.jpg,.jpeg,.pdf" custom-on-change="uploadImagenProd" style="display: none;" />
+                    </div>
+                    <div layout="row" layout-align="center center" ng-show="Documento.intDocClienteID == 9">
+                        <div layout="column">
+                            <label for="file-xls" ng-style="LabelImagen" style="border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer;">
+                                <i ng-class="ImagenProd.name.length > 0 ? 'fas fa-check' : 'fas fa-cloud-upload-alt'"></i><span style="margin-left:10px;">Cargar archivo</span>
+                            </label>
+                            <p style="margin-left:2px; font-size:10px;" ng-if="ImagenProd.name.length > 0">{{ImagenProd.name}}</p>
+                        </div>
+                        <input id="file-xls" type="file" accept=".xls,.xlsx" custom-on-change="uploadImagenProdXLS" style="display: none;" />
+                    </div>
+                    <div layout="row" layout-align="center center" ng-show="Documento.intDocClienteID == 10">
+                        <div layout="column">
+                            <label for="file-xls2" ng-style="LabelImagen" style="border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer;">
+                                <i ng-class="ImagenProd.name.length > 0 ? 'fas fa-check' : 'fas fa-cloud-upload-alt'"></i><span style="margin-left:10px;">Cargar archivo</span>
+                            </label>
+                            <p style="margin-left:2px; font-size:10px;" ng-if="ImagenProd.name.length > 0">{{ImagenProd.name}}</p>
+                        </div>
+                        <input id="file-xls2" type="file" accept=".xls,.xlsx" custom-on-change="uploadImagenProdXLS2" style="display: none;" />
+                    </div>
+                    <div style="min-width:300px;"></div>
+                </ng-form>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-click="cancel()" ng-disabled="Loading">
+            Cancelar
+        </md-button>
+        <md-button class="md-raised md-primary" ng-click="CargarDocA(Documento, $event)" ng-disabled="Loading || !FileImagen">
+            Cargar
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

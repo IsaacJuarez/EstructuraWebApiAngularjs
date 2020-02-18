@@ -1,0 +1,25 @@
+﻿<md-dialog aria-label="Vista Previa del Reporte">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Detalle del Cliente</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon class="fas fa-times fa-2x" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+    <md-dialog-content>
+        <div id="wrappermodal" layout="row" layout-align="center stretch" hide-sm hide-xs show-gt-sm>
+            <iframe id="iFrame" ng-src="{{file.location}}" style="border: 0; min-width: 650px; min-height: 750px;"></iframe>
+        </div>
+        <div id="wrapperlarge" layout="row" layout-align="stretch" show-sm hide-gt-sm>
+            <iframe id="iFrame" ng-src="{{file.location}}" frameborder="0" scrolling="no" onload="resizeIframe(this)" style="width:100%;"></iframe>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button  class="md-raised md-warn" ng-disabled="loading" ng-click="cancel()">
+            Salir
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

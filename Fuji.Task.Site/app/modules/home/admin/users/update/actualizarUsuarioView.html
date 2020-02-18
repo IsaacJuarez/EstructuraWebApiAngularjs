@@ -1,0 +1,130 @@
+﻿<md-dialog aria-label="Editar Usuario">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Editar Usuario</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h2>Editar a {{usuario.vchNombre}}</h2>
+                <p style="margin-bottom:20px;">Complete la siguiente información para modificar el usuario del sistema:</p>
+                <ng-form layout="column" name="FormularioUsuario" layout-padding class="panel-group">
+                    <div class="panel panel-default">
+                        <div layout="column" layout-align="start stretch" class="panel-body">
+                            <md-input-container>
+                                <label>Nombre</label>
+                                <input type="text" name="vchNombre" ng-model="usuario.vchNombre" required />
+                                <div ng-messages="FormularioUsuario.vchNombre.$error" ng-if="FormularioUsuario.vchNombre.$touched">
+                                    <div ng-message="required">Necesita indicar el nombre de la persona a quien se le va asignar el usuario</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Email</label>
+                                <input type="email" name="vchEmail" ng-model="usuario.vchEmail" required ng-blur="Usuario()" />
+                                <div ng-messages="FormularioUsuario.vchEmail.$error" ng-if="FormularioUsuario.vchEmail.$touched">
+                                    <div ng-message="email">No es un correo electrónico válido</div>
+                                    <div ng-message="required">Se requiere asignar un correo electrónico al usuario</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Usuario</label>
+                                <input type="email" name="vchUser" ng-model="usuario.vchUsuario" readonly />
+                                <div ng-messages="FormularioUsuario.vchUsuario.$error" ng-if="FormularioUsuario.vchUsuario.$touched">
+                                    <div ng-message="required">Necesita indicar el nombre de la persona a quien se le va asignar el usuario</div>
+                                    <div ng-message="email">No es un correo electrónico válido</div>
+                                    <div ng-message="existe">Ya existe un usuario registrado con el mismo correo.</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Perfiles</label>
+                                <md-select ng-model="usuario.intTipoUsuarioID" [width]="'100%'" name="Perfil" required>
+                                    <md-option ng-repeat="perfil in perfiles" ng-value="perfil.intTipoUsuarioID">
+                                        {{perfil.vchTipoUsuario}}
+                                    </md-option>
+                                </md-select>
+                                <div ng-messages="FormularioUsuario.Perfil.$error" ng-if="FormularioUsuario.Perfil.$touched">
+                                    <div ng-message="required">Necesitas seleccionar el perfil</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container ng-show="usuario.intTipoUsuarioID == 2 || usuario.intTipoUsuarioID == 3 || usuario.intTipoUsuarioID == 4 ">
+                                <label>Tipo de venta</label>
+                                <md-select ng-model="usuario.intTipoVentaID" [width]="'100%'" name="Venta">
+                                    <md-option ng-repeat="venta in ventas" ng-value="venta.intTipoVentaID">
+                                        {{venta.vchTipoVenta}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Puesto</label>
+                                <input type="text" name="vchPuesto" ng-model="usuario.vchPuesto" required />
+                                <div ng-messages="FormularioUsuario.vchPuesto.$error" ng-if="FormularioUsuario.vchPuesto.$touched">
+                                    <div ng-message="required">Necesita indicar el puesto.</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Número de Celular</label>
+                                <input type="text" name="vchCelular" ng-model="usuario.vchCelular" />
+                                <div ng-messages="FormularioUsuario.vchCelular.$error" ng-if="FormularioUsuario.vchCelular.$touched">
+                                    <div ng-message="required">Necesita indicar el número de celular.</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Extensión de teléfono de oficina</label>
+                                <input type="text" name="vchExt" ng-model="usuario.vchExt" required />
+                                <div ng-messages="FormularioUsuario.vchExt.$error" ng-if="FormularioUsuario.vchExt.$touched">
+                                    <div ng-message="required">Necesita indicar la extensión del teléfono de oficina.</div>
+                                </div>
+                            </md-input-container>
+                            <div>
+                                <md-checkbox ng-model="ModificarPassword" aria-label="ModificarPasswordLabel">
+                                    Modificar contraseña
+                                </md-checkbox>
+                            </div>
+                            <div ng-if="ModificarPassword" ng-show="!Medico" layout="column">
+                                <md-input-container>
+                                    <label>Contraseña</label>
+                                    <input type="password" name="Password" ng-model="usuario.vchPassword" required />
+                                    <div ng-messages="FormularioUsuario.Password.$error" ng-if="FormularioUsuario.Password.$touched">
+                                        <div ng-message="required">Se requiere la contraseña</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container>
+                                    <label>Confirmar contraseña</label>
+                                    <input type="password" name="Confirmacion" ng-model="usuario.Confirmacion" required />
+                                    <div ng-messages="FormularioUsuario.ConfirmPassword.$error" ng-if="FormularioUsuario.Confirmacion.$touched">
+                                        <div ng-message="required">Se requiere confirmar la contraseña</div>
+                                    </div>
+                                </md-input-container>
+                                <div layout-padding ng-if="usuario.vchPassword !== usuario.Confirmacion && usuario.vchPassword != ''">
+                                    <span style="color: red;">Las contraseñas no coinciden</span>
+                                </div>
+                            </div>
+                            <md-input-container ng-show="usuario.intTipoUsuarioID == 2 || usuario.intTipoUsuarioID == 3 || usuario.intTipoUsuarioID == 4 ">
+                                <label>ID del Usuario en Informe de Ventas</label>
+                                <input type="number" name="intUserInfVentID" ng-model="usuario.intUserInfVentID" min="0"/>
+                                <div ng-messages="FormularioUsuario.intUserInfVentID.$error"  ng-if="FormularioUsuario.intUserInfVentID.$touched">
+                                    <div ng-message="number">You did not enter a valid number</div>
+                                    <div ng-message="min">Debe tener un numero mayor o igual a 0</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+            <md-button class="md-raised md-primary" ng-disabled="loading || FormularioUsuario.$invalid" ng-click="ActualizarUsuario(usuario, $event)">
+                Guardar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

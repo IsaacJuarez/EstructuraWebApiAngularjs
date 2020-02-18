@@ -1,0 +1,46 @@
+﻿<md-dialog aria-label="Accesos Sistema">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Acceso</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <h2>Accesos</h2>
+            <p>Gestión de accesos para {{usuario.vchNombre}}</p>
+            <ng-form layout="column" name="forma" layout-padding>
+                <div layout="column" layout-align="space-around stretch">
+                    <table class="table table-sm table-hover" layout-padding>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="text-center">Nombre del Acceso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="permiso in accesos">
+                                <td class="text-center">
+                                    <div style="margin: -5px -5px -15px -5px">
+                                        <md-checkbox ng-model="permiso.bitActivo" aria-label="perimiso-activo" ng-change="ModificarPermiso($event,permiso)">
+                                        </md-checkbox>
+                                    </div>
+                                </td>
+                                <td class="text-center"> {{permiso.vchAcceso}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </ng-form>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+            Salir
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

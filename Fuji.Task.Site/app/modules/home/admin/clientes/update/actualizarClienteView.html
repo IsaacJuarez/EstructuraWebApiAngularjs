@@ -1,0 +1,121 @@
+﻿<md-dialog aria-label="Edición cliente">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edición Cliente</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <p style="margin-bottom:20px;">Complete la siguiente información para actualizar el cliente</p>
+                <ng-form layout="column" name="FormularioCliente" layout-padding class="panel-group">
+                    <div flex class="text-right">
+                        <md-checkbox ng-model="CompletarDatos" aria-label="ModificarPasswordLabel">
+                            Datos completos
+                        </md-checkbox>
+                    </div>
+                    <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                        <div layout="column" layout-align="start stretch" class="panel-body">
+                            <div flex layout="column" layout-align="start stretch" layout-lg="row" layout-align-lg="space-between start">
+                                <md-input-container flex>
+                                    <label>Agente de Ventas</label>
+                                    <md-select ng-model="cliente.intAgenteVentas" [width]="'100%'" name="intAgenteVentas" ng-disabled="usuario.intTipoUsuarioID > 1">
+                                        <md-option ng-repeat="venta in ventas" ng-value="venta.intUsuarioID">
+                                            {{venta.vchNombre}}
+                                        </md-option>
+                                    </md-select>
+                                    <div ng-messages="FormularioCliente.intAgenteVentas.$error" ng-if="FormularioCliente.intAgenteVentas.$touched">
+                                        <div ng-message="required">Necesitas seleccionar un agente de ventas</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <label>Tipo de Cliente</label>
+                                    <md-select ng-model="cliente.intTipoClienteID" [width]="'100%'" name="intTipoClienteID" required>
+                                        <md-option ng-repeat="tipo in TipoCliente" ng-value="tipo.intTipoClienteID">
+                                            {{tipo.vchTipoCliente}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </div>
+                            <md-input-container ng-show="cliente.intTipoClienteID == 2">
+                                <label>Razón Social</label>
+                                <input type="text" name="vchNombreEmpresa" ng-model="cliente.vchNombreEmpresa" ng-required="cliente.intTipoClienteID == 2" />
+                                <div ng-messages="FormularioCliente.vchNombreEmpresa.$error" ng-if="FormularioCliente.vchNombreEmpresa.$touched">
+                                    <div ng-message="required">Necesita indicar la razón social a quien se le va asignar el cliente</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label ng-show="cliente.intTipoClienteID == 2">En atención a</label><label ng-show="cliente.intTipoClienteID == 1">Nombre cliente</label>
+                                <input type="text" name="vchNombre" ng-model="cliente.vchNombre" required />
+                                <div ng-messages="FormularioCliente.vchNombre.$error" ng-if="FormularioCliente.vchNombre.$touched">
+                                    <div ng-message="required">Necesita indicar el nombre de la persona a quien se le va asignar el cliente</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Email</label>
+                                <input type="email" name="vchEmail" ng-model="cliente.vchEmail" required" />
+                                <div ng-messages="FormularioCliente.vchEmail.$error" ng-if="FormularioCliente.vchEmail.$touched">
+                                    <div ng-message="email">No es un correo electrónico válido</div>
+                                    <div ng-message="required">Se requiere asignar un correo electrónico al cliente</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container ng-show="CompletarDatos">
+                                <label>RFC</label>
+                                <input type="text" name="vchRFC" ng-model="cliente.vchRFC" ng-required="CompletarDatos" ng-blur="validarRFC(cliente.vchRFC)" />
+                                <span ng-show="valid" class="md-input-invalid md-input-message-animation">Formato de RFC no es válido.</span>
+                                <div ng-messages="FormularioCliente.vchRFC.$error" ng-if="FormularioCliente.vchRFC.$touched">
+                                    <div ng-message="required">Necesita indicar el nombre de la persona a quien se le va asignar el cliente</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container ng-show="CompletarDatos">
+                                <label>Num de Cliente</label>
+                                <input type="text" name="vchClienteID" ng-model="cliente.vchClienteID" ng-required="CompletarDatos" "   />
+                                <div ng-messages="FormularioCliente.vchClienteID.$error" ng-if="FormularioCliente.vchClienteID.$touched">
+                                    <div ng-message="required">Necesita indicar el numero de cliente o código de cliente</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container ng-show="CompletarDatos">
+                                <label>Agente de Cobranza</label>
+                                <md-select ng-model="cliente.intAgenteCobranza" [width]="'100%'" name="intAgenteCobranza" ng-required="CompletarDatos">
+                                    <md-option ng-repeat="cobranza in cobranzas" ng-value="cobranza.intUsuarioID">
+                                        {{cobranza.vchNombre}}
+                                    </md-option>
+                                </md-select>
+                                <div ng-messages="FormularioCliente.intAgenteCobranza.$error" ng-if="FormularioCliente.intAgenteCobranza.$touched">
+                                    <div ng-message="required">Necesitas seleccionar un agente de cobranza</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Teléfono</label>
+                                <input type="text" name="vchTelefono" ng-model="cliente.vchTelefono" required />
+                                <div ng-messages="FormularioCliente.vchTelefono.$error" ng-if="FormularioCliente.vchTelefono.$touched">
+                                    <div ng-message="required">Necesita indicar el número de teléfono.</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Fax</label>
+                                <input type="text" name="vchFax" ng-model="cliente.vchFax" ng-required="CompletarDatos" />
+                                <div ng-messages="FormularioCliente.vchFax.$error" ng-if="FormularioCliente.vchFax.$touched">
+                                    <div ng-message="required">Necesita indicar el numero de fax</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+            <md-button ng-if="AdminClient" class="md-raised md-primary" ng-disabled="loading || FormularioCliente.$invalid" ng-click="ActualizarCliente(cliente, $event)">
+                Guardar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

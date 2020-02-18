@@ -1,0 +1,648 @@
+﻿<md-content layout="row" layout-align="center" ng-cloak>
+    <md-card flex style="font-size:small;">
+        <md-toolbar md-scroll-shrink>
+            <div class="md-toolbar-tools">
+                <md-button ng-click="back()" ng-disabled="loading" aria-label="btnAtras" title="Regresar">
+                    <md-icon md-menu-align-target class="fas fa-chevron-circle-left fa-2x"></md-icon>
+                </md-button>
+                <h2 flex md-truncate>
+                    <span>Nueva Cotización</span>
+                </h2>
+                <div layout="row" layout-align="end start">
+                    <md-button ng-click="SaveCot()" ng-disabled="loading || FormularioCotizacion.$invalid || TipoVentas.length  == 0" aria-label="btnSave" title="Guardar">
+                        <md-icon md-menu-align-target class="fas fa-save fa-2x"></md-icon>
+                    </md-button>
+                </div>
+            </div>
+        </md-toolbar>
+        <md-progress-linear class="md-warn" md-mode="indeterminate" ng-if="loading"></md-progress-linear>
+        <md-card-title style="background: url('app/assets/FFM.png') ; background-size: cover;">
+            <md-card-title-text>
+            </md-card-title-text>
+        </md-card-title>
+        <ng-form layout="column" name="FormularioCotizacion" layout-padding>
+            <md-card-content>
+                <md-content>
+                    <md-tabs md-dynamic-height md-border-bottom>
+                        <md-tab label="Cotización">
+                            <div layout="row" layout-wrap>
+                                <!--Pantalla modo PC-->
+                                <div flex class="md-dialog-content">
+                                    <div layout="column" layout-align="start stretch" class="panel-body">
+                                        <div flex layout="row" layout-wrap="" layout-align="space-between start">
+                                            <div flex="100" flex-gt-sm="80">
+                                                <div flex layout="column">
+                                                    <md-input-container flex>
+                                                        <label title="Nombre de la cotización">Nombre de la cotización</label>
+                                                        <input type="text" name="vchNombre" flex ng-model="cotizacion.vchNombre" title="Nombre de la cotización" required />
+                                                        <div ng-messages="FormularioCotizacion.vchNombre.$error" ng-if="FormularioCotizacion.vchNombre.$touched">
+                                                            <div ng-message="required">Necesita indicar el nombre de la cotización</div>
+                                                        </div>
+                                                    </md-input-container>
+                                                </div>
+                                            </div>
+                                            <div flex="100" flex-gt-sm="20">
+                                                <div flex layout="row">
+                                                    <md-input-container flex>
+                                                        <label>Moneda</label>
+                                                        <md-select flex [width]="'100%'" ng-model="cotizacion.intMonedaID" name="intMonedaID" ng-change="TipoMonedaChange($event, cotizacion.intMonedaID)" required>
+                                                            <md-option ng-repeat="mon in tipoMon" ng-value="mon.intMonedaID">
+                                                                {{mon.vchMoneda}}
+                                                            </md-option>
+                                                        </md-select>
+                                                    </md-input-container>
+                                                    <md-button ng-click="showSimpleToast($event)" aria-label="btnDollar" title="Factor de Cambio">
+                                                        <md-icon class="fas fa-dollar-sign fa-lg"></md-icon>
+                                                    </md-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div layout="row" layout-align="space-between start">
+                                            <md-autocomplete flex md-selected-item="ClienteSelected"
+                                                             md-selected-item-change="selectedItemChange(cliente)"
+                                                             md-search-text="searchText"
+                                                             md-items="cliente in querySearch(searchText)"
+                                                             md-item-text="cliente.vchNombre"
+                                                             placeholder="Cliente"
+                                                             md-no-cache="true"
+                                                             ng-disabled="loading">
+                                                <md-item-template>
+                                                    <span md-highlight-text="searchText" md-highlight-flags="^i">{{cliente.vchNombre}}</span>
+                                                </md-item-template>
+                                                <md-not-found>
+                                                    No existen coincidencias con "{{searchText}}".
+                                                </md-not-found>
+                                            </md-autocomplete>
+                                            <md-button ng-click="DetalleCliente($event)" ng-show="ClienteSelected.intClienteID > 0" aria-label="btnDetailClient" title="Detalle Cliente">
+                                                <md-icon class="fas fa-user-edit fa-lg"></md-icon>
+                                            </md-button>
+                                            <md-button ng-click="NuevoCliente($event)" aria-label="btnNewClient" title="Nuevo Cliente">
+                                                <md-icon class="fas fa-plus fa-lg"></md-icon>
+                                            </md-button>
+                                        </div>
+                                        <br />
+                                        <div flex layout="row" layout-wrap="" layout-align="space-between start" layout-xs="column" layout-align-xs="center stretch">
+                                            <div flex="100" flex-gt-sm="20">
+                                                <md-switch flex md-invert ng-model="TipoProducto" aria-label="ProductoTipo" ng-true-value="'Equipo'" ng-false-value="'Consumible'" class="md-primary" ng-change="TipoProductoChange($event, TipoProducto, intLineaProdID)">
+                                                    Productos: {{ TipoProducto }}
+                                                </md-switch>
+                                            </div>
+                                            <div flex="100" flex-gt-sm="20">
+                                                <div flex layout="column">
+                                                    <md-input-container flex>
+                                                        <label>Línea de Productos</label>
+                                                        <md-select ng-model="intLineaProdID" flex name="intTipoContizacionID" ng-change="TipoProductoChange($event, TipoProducto, intLineaProdID)" required>
+                                                            <md-option ng-repeat="prod in tipoPs" ng-value="prod.intLineaProdID">
+                                                                {{prod.vchLinea}}
+                                                            </md-option>
+                                                        </md-select>
+                                                    </md-input-container>
+                                                </div>
+                                            </div>
+                                            <div flex="100" flex-gt-sm="60" layout="row">
+                                                <md-autocomplete flex 
+                                                                 md-selected-item="ProductSelected"
+                                                                 md-selected-item-change="selectedItemChangeP(productoItem)"
+                                                                 md-search-text="searchTextP"
+                                                                 md-items="productoItem in querySearchP(searchTextP)"
+                                                                 md-item-text="productoItem.vchBusqueda"
+                                                                 placeholder="Productos"
+                                                                 md-no-cache="true"
+                                                                 ng-disabled="loading">
+                                                    <md-item-template>
+                                                        <span md-highlight-text="searchTextP" md-highlight-flags="^i">{{productoItem.vchBusqueda}}</span>
+                                                    </md-item-template>
+                                                    <md-not-found>
+                                                        No existen coincidencias con "{{searchTextP}}".
+                                                    </md-not-found>
+                                                </md-autocomplete>
+                                                <md-button ng-click="addProductQuick($event)" ng-show="ProductSelected.intProductoID > 0" ng-disabled="loading" aria-label="btnNewProduct" title="Agregar Producto">
+                                                    <md-icon class="fas fa-plus fa-lg green"></md-icon>
+                                                </md-button>
+                                                <md-button ng-click="VerProducto($event, ProductSelected)" ng-show="ProductSelected.intProductoID > 0 && ProductSelected.bitImagen" ng-disabled="loading" aria-label="btnViewProduct" title="Ver Producto">
+                                                    <md-icon class="fas fa-eye fa-lg green"></md-icon>
+                                                </md-button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div flex layout="column" layout-align="space-around stretch">
+                                        <div flex class="panel panel-default" style="border-left-color:darkcyan !important; border-left-width:5px !important;">
+                                            <div flex layout="column" layout-align="space-around stretch" class="panel-body">
+                                                <div flex id="divEquipo" layout="column" layout-align="space-around stretch">
+                                                    <div flex id="facturas_header" layout="row" layout-align="start center" layout-padding>
+                                                        <div style="width: 75px" class="text-center">
+                                                            <md-button ng-click="clearProducts($event)" ng-show="carrito.length > 0" ng-disabled="loading" aria-label="btnClearProd" title="Limpiar carrito">
+                                                                <md-icon class="fas fa-trash-alt green"></md-icon>
+                                                            </md-button>
+                                                        </div>
+                                                        <div flex hide show-gt-sm><span><strong>Codigo SAP</strong></span></div>
+                                                        <div flex hide show-gt-sm><span><strong>Producto</strong></span></div>
+                                                        <div flex show-gt-lg hide-lg style="min-width:180px;"><span><strong>Descripción</strong></span></div>
+                                                        <div flex class="text-center" style="width:75px" show-gt-xs hide-xs><span><strong>Cantidad</strong></span></div>
+                                                        <div flex class="text-right"><span><strong>Costo Unitario</strong></span></div>
+                                                        <div flex class="text-right" show-gt-xs hide-xs><span><strong>Costo Total</strong></span></div>
+                                                    </div>
+                                                    <div flex id="facturas_body" layout="column" ng-repeat="ejercicio in carrito" style="font-size:small;">
+                                                        <div layout="row" layout-align="center center">
+                                                            <div layout="row" layout-xs="column" style="width: 75px">
+                                                                <span class="fas fa-medkit" style="color:darkslateblue;" title="Equipo" ng-if="ejercicio.intTipoProductoID == 1"></span>
+                                                                <span class="fas fa-pills" style="color:lightseagreen;" title="Consumible" ng-if="ejercicio.intTipoProductoID == 2"></span>
+                                                                <md-button ng-show="ejercicio.bitPaquete" ng-click="MostrarRegistros(ejercicio, $event)" aria-label="Mostrar Registro" style="margin-top:0 !important; margin-bottom: 0 !important;">
+                                                                    <md-icon ng-class="ejercicio.showRegisters ? 'fas fa-arrow-down fa-lg' : 'fas fa-arrow-right fa-lg'"></md-icon>
+                                                                </md-button>
+                                                                <md-button ng-disabled="(cotizacion.intEstatusCotID >= 2 && cotizacion.intUsuarioID != Usuario.intUsuarioID)" ng-click="BorrarRegistros(ejercicio, $event)" aria-label="Borrar Registro" style="margin-top:0 !important; margin-bottom: 0 !important;">
+                                                                    <md-icon class="fas fa-times fa-lg"></md-icon>
+                                                                </md-button>
+                                                            </div>
+                                                            <div flex class="text-left" hide show-gt-sm>
+                                                                {{ejercicio.vchCodigoProd}}
+                                                            </div>
+                                                            <div flex class="text-left" hide show-gt-sm>
+                                                                {{ejercicio.vchNombreProducto}}
+                                                            </div>
+                                                            <div flex class="text-left" show-gt-lg hide-lg style="min-width:180px;">
+                                                                <span hide-gt-sm="">{{ejercicio.vchDescripcionProd}}</span>
+                                                                <span hide="" show-gt-sm="" style="font-size:x-small;">{{ejercicio.vchDescripcionProd}}</span>
+                                                            </div>
+                                                            <div flex class="text-center" style="width: 75px" show-gt-xs hide-xs>
+                                                                <input style="width: 65px" flex type="number" class="text-right" name="intCantidad" min="0" step='1' ng-model="ejercicio.intCantidad" title="Cantidad" ng-change="CalcularCosto($event)" />
+                                                            </div>
+                                                            <div flex layout="column" layout-align="center stretch">
+                                                                <div flex layout="row" layout-align="space-between start" layout-xs="column" layout-align-xs="center stretch" class="text-center">
+                                                                    <div flex ng-if="!ejercicio.bitPrecios" class="text-center"><span>{{ejercicio.decCostoUnitario | currency}}</span></div>
+                                                                    <div flex layout="row" layout-align="space-between start" ng-if="ejercicio.bitPrecios" class="text-center">
+                                                                        <div flex layout="column" layout-align="space-between stretch" class="text-right">
+                                                                            <!--<label>{{ejercicio.precioItem.vchNombrePrecio}}</label>-->
+                                                                            <span>{{ejercicio.precioItem.decPrecioCambio  | currency}}</span>
+                                                                        </div>
+                                                                        <span title="Requiere autorización" class="fas fa-exclamation-triangle red" ng-show="ejercicio.precioItem.bitAutorizacion || ejercicio.precioItem.decPrecioDescuento > 0"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div flex class="text-right" show-gt-xs hide-xs>
+                                                                {{ejercicio.decCostoTotal | currency}}
+                                                            </div>
+                                                        </div>
+                                                        <div flex ng-show="ejercicio.showRegisters" layout-padding style="padding-left:40px !important;">
+                                                            <div class="panel panel-default" style="border-left-color:#00A59C !important; border-left-width:5px !important;">
+                                                                <div class="panel-body">
+                                                                    <div id="facturas_header2" layout="row" layout-align="start center" layout-padding>
+                                                                        <div flex hide show-gt-sm><span><strong>Codigo SAP</strong></span></div>
+                                                                        <div flex hide show-gt-sm><span><strong>Producto</strong></span></div>
+                                                                        <div flex show-gt-lg hide-lg><span><strong>Descripción</strong></span></div>
+                                                                        <div flex class="text-center" style="width:75px"><span><strong>Cantidad</strong></span></div>
+                                                                    </div>
+                                                                    <div id="facturas_body2" layout="column" ng-repeat="detalle in ejercicio.Detalle">
+                                                                        <div layout="row" layout-align="start center" layout-padding style="padding-top:2px; padding-bottom:2px; margin-top:0; margin-bottom:0; border-color:#e4e4e4; border-style: solid; border-width: 1px 0 0 0;">
+                                                                            <div flex class="text-left" hide show-gt-sm>
+                                                                                {{detalle.vchCodigoProd}}
+                                                                            </div>
+                                                                            <div flex class="text-left" hide show-gt-sm>
+                                                                                {{detalle.vchNombreProducto}}
+                                                                            </div>
+                                                                            <div flex class="text-left" show-gt-lg hide-lg>
+                                                                                {{detalle.vchDescripcionProd}}
+                                                                            </div>
+                                                                            <div flex class="text-center" style="width: 75px">
+                                                                                {{ejercicio.intCantidad}}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div flex layout="row" layout-align="start start">
+                                            <div flex class="table table-sm table-hover" layout-padding>
+                                                <div flex layout="row">
+                                                    <div flex="70%" layout="row">
+                                                        <div flex ng-if="ejercicioTotal.descuento > 10">
+                                                            <div flex layout="row">
+                                                                <md-input-container flex>
+                                                                    <label title="Observaciones de Descuento">Observaciones de Descuento</label>
+                                                                    <textarea name="vchObservacionesDesc" ng-model="cotizacion.vchObservacionesDesc" title="Observaciones de Descuento" ng-required="BitObservaciones" />
+                                                                    <div ng-messages="FormularioCotizacion.vchObservacionesDesc.$error" ng-if="FormularioCotizacion.vchObservacionesDesc.$touched">
+                                                                        <div ng-message="required">Necesita indicar la justificación a la solicitud de descuento.</div>
+                                                                    </div>
+                                                                </md-input-container>
+                                                            </div>
+                                                        </div>
+                                                        <div flex class="text-right">
+                                                            <div class="text-right" flex layout="row" layout-align="end center">
+                                                                <span ng-if="ejercicioTotal.descuento > 10"><i class="fas fa-exclamation-triangle red" style="color:red"></i></span>
+                                                                <!--<ng-gauge ng-if="Usuario.intTipoVentaID == 2" type="semi" value="ejercicioTotal.descuento" min="0" max="50" aria-label="DescuentoVDis" thresholds="thresholdOptions" thick="5" size="120" label="Descuento" append="%"></ng-gauge>-->
+                                                                <ng-gauge  type="semi" value="ejercicioTotal.descuento" min="0" max="50" aria-label="DescuentoVDir" thresholds="thresholdOptions" thick="5" size="120" label="Descuento" append="%"></ng-gauge>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div align="right" flex="30%">
+                                                        <table class="table table-sm table-hover">
+                                                            <tr>
+                                                                <td>GRAN TOTAL</td>
+                                                                <td class="text-right">{{ejercicioTotal.granTotal | currency}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>DESCUENTO%</td>
+                                                                <td class="text-right">
+                                                                    <div flex>
+                                                                        <input class="text-right" type="number" name="descuento" step='1' ng-model="ejercicioTotal.descuento" title="descuento" ng-change="CalcularTotal($event)" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>TOTAL</td>
+                                                                <td class="text-right">
+                                                                    <div flex>
+                                                                        <input class="text-right" format="currency" type="text" name="Total" step='0.01' ng-model="ejercicioTotal.Total" title="Total" ng-change="CalcularDescuento($event)" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </md-tab>
+                        <md-tab label="Condiciones de Cotización">
+                            <label>Monto de Cotización</label>
+                            <h3>{{ejercicioTotal.Total | currency}}</h3>
+                            <div flex layout="column" layout-wrap="" layout-align="space-between stretch" layout-gt-sm="row" layout-align-gt-sm="space-between start">
+                                <div flex>
+                                    <div flex layout="row" layout-align="center center">
+                                        <div flex class="panel panel-default">
+                                            <md-toolbar class="md-theme-light">
+                                                <div class="md-toolbar-tools">
+                                                    <h2 class="md-toolbar-tools">
+                                                        <span>Detalle de la operación</span>
+                                                    </h2>
+                                                </div>
+                                            </md-toolbar>
+                                            <md-card>
+                                                <div layout="column" layout-align="space-around stretch">
+                                                    <table class="table table-sm table-striped" layout-padding>
+                                                        <thead>
+                                                            <tr class="d-flex table-info">
+                                                                <th class="col-sm-3"></th>
+                                                                <th class="col-sm-3 white">Días</th>
+                                                                <th class="col-sm-3 white">Semanas</th>
+                                                                <th class="col-sm-3 white">{{Condicion.bitEntregaN ? 'No. de días' : 'No. de semanas'}}</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="d-flex">
+                                                                <td class="col-md-3"><strong>Entregas</strong></td>
+                                                                <td class="col-md-3">
+                                                                    <md-checkbox ng-model="Condicion.bitEntregaN" ng-change="CambiarEntregaN($event);" aria-label="Checkbox 1"></md-checkbox>
+                                                                </td>
+                                                                <td class="col-md-3">
+                                                                    <md-checkbox ng-model="Condicion.bitEntregaS" ng-change="CambiarEntregaS($event)" aria-label="Checkbox 2"></md-checkbox>
+                                                                </td>
+                                                                <td class="col-md-3">
+                                                                    <div class="input-group input-group-sm">
+                                                                        <input class="form-control" type="number" name="intEntrega" ng-model="Condicion.intEntrega" ng-min="1" required />
+                                                                        <div ng-messages="FormularioCotizacion.intEntrega.$error" ng-if="FormularioCotizacion.intEntrega.$touched">
+                                                                            <div ng-message="required">Necesita indicar el numero de días para la instalación.</div>
+                                                                            <div ng-message="number">Necesita indicar el numero de días para la instalación.</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <table class="table table-sm table-striped" layout-padding>
+                                                        <thead>
+                                                            <tr class="d-flex table-info">
+                                                                <th class="col-sm-3"></th>
+                                                                <th class="col-sm-3 white">No</th>
+                                                                <th class="col-sm-3 white">Sí</th>
+                                                                <th class="col-sm-3 white">{{Condicion.bitInstalacionS ? 'No. de días' : ''}}</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="d-flex">
+                                                                <td class="col-md-3"><strong>Instalación</strong></td>
+                                                                <td class="col-md-3">
+                                                                    <md-checkbox ng-model="Condicion.bitInstalacionN" ng-change="CambiarInstalacionN($event)" aria-label="Checkbox No">
+                                                                    </md-checkbox>
+                                                                </td>
+                                                                <td class="col-md-3">
+                                                                    <md-checkbox ng-model="Condicion.bitInstalacionS" ng-change="CambiarInstalacionS($event)" aria-label="Checkbox Si">
+                                                                    </md-checkbox>
+                                                                </td>
+                                                                <td class="col-md-3">
+                                                                    <div class="input-group input-group-sm" ng-if="Condicion.bitInstalacionS">
+                                                                        <input class="form-control" type="number" name="intDiasInstalacion" ng-model="Condicion.intDiasInstalacion" ng-min="1" ng-required="Condicion.bitInstalacionS" />
+                                                                        <div ng-messages="FormularioCotizacion.intDiasInstalacion.$error" ng-if="FormularioCotizacion.intDiasInstalacion.$touched">
+                                                                            <div ng-message="required">Necesita indicar el numero de días para la instalación.</div>
+                                                                            <div ng-message="number">Necesita indicar el numero de días para la instalación.</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <table class="table table-sm table-striped" layout-padding>
+                                                        <thead>
+                                                            <tr class="d-flex table-info">
+                                                                <th class="col-sm-3"></th>
+                                                                <th class="col-sm-3 white">No</th>
+                                                                <th class="col-sm-3 white">Sí</th>
+                                                                <th class="col-sm-3 white">{{Condicion.bitGarantiaS ? 'No. de años' : ''}}</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="d-flex">
+                                                                <td class="col-sm-3"><strong>Garantía</strong></td>
+                                                                <td class="col-sm-3">
+                                                                    <md-checkbox ng-model="Condicion.bitGarantiaN" ng-change="CambiarGarantiaN($event)" aria-label="Checkbox No">
+                                                                    </md-checkbox>
+                                                                </td>
+                                                                <td class="col-sm-3">
+                                                                    <md-checkbox ng-model="Condicion.bitGarantiaS" ng-change="CambiarGarantiaS($event)" aria-label="Checkbox Si">
+                                                                    </md-checkbox>
+                                                                </td>
+                                                                <td class="col-sm-3">
+                                                                    <div class="input-group input-group-sm" ng-if="Condicion.bitGarantiaS">
+                                                                        <input class="form-control" type="number" name="intGarantia" ng-model="Condicion.intGarantia" ng-min="1" ng-required="Condicion.bitGarantiaS" />
+                                                                        <div ng-messages="FormularioCotizacion.intGarantia.$error" ng-if="FormularioCotizacion.intGarantia.$touched">
+                                                                            <div ng-message="required">Necesita indicar el numero de días para la instalación.</div>
+                                                                            <div ng-message="number">Necesita indicar el numero de dias para la instalación</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <table class="table table-sm table-striped" layout-padding>
+                                                        <thead>
+                                                            <tr class="d-flex table-info">
+                                                                <th class="col-sm-4"></th>
+                                                                <th class="col-sm-4 white">No</th>
+                                                                <th class="col-sm-4 white">Sí</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="d-flex">
+                                                                <td class="col-sm-4"><strong>Mantenimiento</strong></td>
+                                                                <td class="col-sm-4">
+                                                                    <md-checkbox ng-model="Condicion.bitMantenimientoN" ng-change="CambiarMantenimientoN($event)" aria-label="Checkbox No">
+                                                                    </md-checkbox>
+                                                                </td>
+                                                                <td class="col-sm-4">
+                                                                    <md-checkbox ng-model="Condicion.bitMantenimientoS" ng-change="CambiarMantenimientoS($event)" aria-label="Checkbox Si">
+                                                                    </md-checkbox>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <table class="table table-sm table-striped" layout-padding>
+                                                        <thead>
+                                                            <tr class="d-flex table-info">
+                                                                <th class="col-sm-4"></th>
+                                                                <th class="col-sm-4 white">No</th>
+                                                                <th class="col-sm-4 white">Sí</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="d-flex">
+                                                                <td class="col-sm-4"><strong>Soporte y asistencia técnica</strong></td>
+                                                                <td class="col-sm-4">
+                                                                    <md-checkbox ng-model="Condicion.bitSoporteAsisTecN" ng-change="CambiarBitN($event)" aria-label="Checkbox No">
+                                                                    </md-checkbox>
+                                                                </td>
+                                                                <td class="col-sm-4">
+                                                                    <md-checkbox ng-model="Condicion.bitSoporteAsisTecS" ng-change="CambiarBitS($event)" aria-label="Checkbox Si">
+                                                                    </md-checkbox>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </md-card>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div flex>
+                                    <div flex layout="row" layout-align="center center">
+                                        <div flex layout-align="space-between center" class="panel panel-default">
+                                            <md-toolbar class="md-theme-light">
+                                                <div class="md-toolbar-tools">
+                                                    <h2 class="md-toolbar-tools">
+                                                        <span>Tipo de venta</span>
+                                                    </h2>
+                                                </div>
+                                            </md-toolbar>
+                                            <md-card>
+                                                <p style="margin-bottom:20px;">Seleccionar el(los) tipo(s) de venta que será(n) enviada(s) como propuesta económica:</p>
+                                                <div flex layout="row" layout-wrap="" layout-align="space-between start" layout-xs="column" layout-align-xs="center stretch">
+                                                    <div flex layout="column" layout-align="start stretch">
+                                                        <div flex layout="row">
+                                                            <div flex layout="row">
+
+                                                            </div>
+                                                            <div flex class="text-center" style="background-color:black; color:white; border: .1px solid #dee2e6;">
+                                                                <strong>Contado</strong>
+                                                            </div>
+                                                            <div flex layout="row" layout-align="center center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Contado" aria-label="CheckboxContado" ng-change="AgregarTV($event,1,TipoVenta.Contado)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                        </div>
+                                                        <!--<div flex layout="row">
+                                                            <div flex class="text-center">
+
+                                                            </div>
+                                                            <div flex layout="row" layout-align="center center" style="background-color:#38946b; color:white; border: .1px solid #dee2e6;">
+                                                                <strong> Solo por Hoy</strong>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.SXH" aria-label="CheckboxSXH" ng-change="AgregarTV($event,2,TipoVenta.SXH)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                        </div>-->
+                                                        <div flex layout="row">
+                                                            <div flex layout="row">
+
+                                                            </div>
+                                                            <div flex class="text-center" style="background-color:black; color:white; border: .1px solid #dee2e6;">
+                                                                <strong>Arrendamiento</strong>
+                                                            </div>
+                                                            <div flex class="text-center" style="background-color:black; color:white; border: .1px solid #dee2e6;">
+                                                                <strong>Financiamiento</strong>
+                                                            </div>
+                                                        </div>
+                                                        <div flex layout="row">
+                                                            <div flex class="text-center" style="background-color:#dee2e6;">
+                                                                <strong>1 mes</strong>
+                                                            </div>
+                                                            <div flex layout="row" layout-align="center center" style="border: .1px solid #dee2e6;">
+                                                                <!--<md-checkbox ng-model="TipoVenta.Arr1" aria-label="CheckboxArr1" ng-change="AgregarTV($event,3,TipoVenta.Arr1)">
+                                                                </md-checkbox>-->
+                                                            </div>
+                                                            <div flex layout="row" layout-align="center center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Fin1" aria-label="CheckboxFin1" ng-change="AgregarTV($event,4,TipoVenta.Fin1)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                        </div>
+                                                        <div flex layout="row">
+                                                            <div flex class="text-center" style="background-color:#dee2e6;">
+                                                                <strong>2 meses</strong>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <!--<md-checkbox ng-model="TipoVenta.Arr2" aria-label="CheckboxArr2" ng-change="AgregarTV($event,5,TipoVenta.Arr2)">
+                                                                </md-checkbox>-->
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Fin2" aria-label="CheckboxFin2" ng-change="AgregarTV($event,6,TipoVenta.Fin2)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                        </div>
+                                                        <div flex layout="row">
+                                                            <div flex class="text-center" style="background-color:#dee2e6;">
+                                                                <strong> 3 meses</strong>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <!--<md-checkbox ng-model="TipoVenta.Arr3" aria-label="CheckboxArr3" ng-change="AgregarTV($event,7,TipoVenta.Arr3)">
+                                                                </md-checkbox>-->
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Fin3" aria-label="CheckboxFin3" ng-change="AgregarTV($event,8,TipoVenta.Fin3)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                        </div>
+                                                        <div flex layout="row">
+                                                            <div flex class="text-center" style="background-color:#dee2e6;">
+                                                                <strong>6 meses</strong>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <!--<md-checkbox ng-model="TipoVenta.Arr6" aria-label="CheckboxArr6" ng-change="AgregarTV($event,9,TipoVenta.Arr6)">
+                                                                </md-checkbox>-->
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Fin6" aria-label="CheckboxFin6" ng-change="AgregarTV($event,10,TipoVenta.Fin6)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                        </div>
+                                                        <div flex layout="row">
+                                                            <div flex class="text-center" style="background-color:#dee2e6;">
+                                                                <strong>12 meses</strong>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Arr12" aria-label="CheckboxArr12" ng-change="AgregarTV($event,11,TipoVenta.Arr12)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Fin12" aria-label="CheckboxFin12" ng-change="AgregarTV($event,12,TipoVenta.Fin12)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                        </div>
+                                                        <div flex layout="row">
+                                                            <div flex class="text-center" style="background-color:#dee2e6;">
+                                                                <strong>18 meses</strong>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Arr18" aria-label="CheckboxArr18" ng-change="AgregarTV($event,13,TipoVenta.Arr18)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Fin18" aria-label="CheckboxFin18" ng-change="AgregarTV($event,14,TipoVenta.Fin18)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                        </div>
+                                                        <div flex layout="row">
+                                                            <div flex class="text-center" style="background-color:#dee2e6;">
+                                                                <strong>24 meses</strong>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Arr24" aria-label="CheckboxArr24" ng-change="AgregarTV($event,15,TipoVenta.Arr24)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Fin24" aria-label="CheckboxFin24" ng-change="AgregarTV($event,16,TipoVenta.Fin24)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                        </div>
+                                                        <div flex layout="row">
+                                                            <div flex class="text-center" style="background-color:#dee2e6;">
+                                                                <strong>36 meses</strong>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Arr36" aria-label="CheckboxArr36" ng-change="AgregarTV($event,17,TipoVenta.Arr36)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Fin36" aria-label="CheckboxFin36" ng-change="AgregarTV($event,18,TipoVenta.Fin36)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                        </div>
+                                                        <div flex layout="row">
+                                                            <div flex class="text-center" style="background-color:#dee2e6;">
+                                                                <strong>48 meses</strong>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Arr48" aria-label="CheckboxArr48" ng-change="AgregarTV($event,19,TipoVenta.Arr48)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Fin48" aria-label="CheckboxFin48" ng-change="AgregarTV($event,20,TipoVenta.Fin48)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                        </div>
+                                                        <div flex layout="row">
+                                                            <div flex class="text-center" style="background-color:#dee2e6;">
+                                                                <strong>60 meses</strong>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Arr60" aria-label="CheckboxArr60" ng-change="AgregarTV($event,21,TipoVenta.Arr60)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                            <div flex class="text-center" style="border: .1px solid #dee2e6;">
+                                                                <md-checkbox ng-model="TipoVenta.Fin60" aria-label="CheckboxFin60" ng-change="AgregarTV($event,22,TipoVenta.Fin60)">
+                                                                </md-checkbox>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div flex>
+                                                        <div flex class="panel-body" layout="column">
+                                                            <md-input-container flex>
+                                                                <label>Anticipo Adicional  (<span ng-show="cotizacion.intMonedaID == 1">Pesos</span><span ng-show="cotizacion.intMonedaID == 2">Dólares</span>)</label>
+                                                                <input type="number" name="Total" ng-model="cotizacion.decActicipoAdi" ng-change="CalcularCostoDetalle()" step="1" min="0" value="0" />
+                                                            </md-input-container>
+                                                            <md-input-container flex>
+                                                                <label>Detalle del cliente</label>
+                                                                <textarea type="text" name="Detalle" ng-model="cotizacion.vchDetalleOperacion" />
+                                                            </md-input-container>
+                                                            <p style="margin-bottom:20px;"><strong>Propuesta económica seleccionada:</strong></p>
+                                                            <ul id="sortable" class="list-group">
+                                                                <li class="list-group-item" ng-repeat="mod in TipoVentas" id="{{mod.ID}}">
+                                                                    <div flex layout="row" layout-align="center start" ng-click="VerEvento($event, mod)" style="color:darkgreen">
+                                                                        <h5>{{mod.tipo}} &nbsp;&nbsp;<small ng-show="mod.ID > 2">{{mod.Plazo}} Meses</small></h5>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </md-card>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </md-tab>
+                    </md-tabs>
+                </md-content>
+            </md-card-content>
+        </ng-form>
+    </md-card>
+</md-content>

@@ -1,0 +1,28 @@
+﻿<md-content layout="row" layout-align="center">
+    <md-card flex-xs="100" flex-gt-xs="100" flex-gt-sm="65">
+        <md-toolbar md-scroll-shrink>
+            <div class="md-toolbar-tools">
+                <h3>
+                    <span>Leads</span>
+                </h3>
+                <span flex></span>
+            </div>
+        </md-toolbar>
+        <md-card-title style="background: url('app/assets/FFM.png') ; background-size: cover;" flex>
+            <md-card-title-text>
+                <md-button ng-if="Globals.CurrentUserCot" href="#/eventos" layout="column" layout-align="center center">
+                    <div class="fas fa-calendar-alt fa-5x green" ></div>
+                    <div>Eventos</div>
+                </md-button>
+                <!--<md-button ng-if="Globals.CurrentUserCot" ng-click="MenuEventos($event)" layout="column" layout-align="center center">
+                    <div class="fas fa-calendar-check fa-5x green"></div>
+                    <div>Registros por evento</div>
+                </md-button>
+                <md-button ng-if="Globals.CurrentUserCot.intTipoUsuarioID == 1" href="#/eventos/estadisticas" layout="column" layout-align="center center">
+                    <div class="fas fa-chart-line fa-5x green"></div>
+                    <div>Estadística</div>
+                </md-button>-->
+            </md-card-title-text>
+        </md-card-title>
+    </md-card>
+</md-content>

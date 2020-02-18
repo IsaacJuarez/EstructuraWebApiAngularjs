@@ -1,0 +1,69 @@
+﻿<md-dialog aria-label="Agregar Usuario">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Autorizadores</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <h2>Autorizadores</h2>
+            <p>Gestión de autorizadores para {{usuario.vchNombre}}</p>
+            <ng-form layout="column" name="forma" layout-padding>
+                <md-autocomplete md-selected-item="autorizadorSelected"
+                                 md-selected-item-change="selectedItemChange(autorizador)"
+                                 md-search-text="searchText"
+                                 md-items="autorizador in querySearch(searchText)"
+                                 md-item-text="autorizador.vchNombre"
+                                 placeholder="Autorizador"
+                                 md-no-cache="true">
+                    <md-item-template>
+                        <span md-highlight-text="searchText" md-highlight-flags="^i">{{autorizador.vchNombre}}</span>
+                    </md-item-template>
+                    <md-not-found>
+                        No existen coincidencias con "{{searchText}}".
+                    </md-not-found>
+                </md-autocomplete>
+                <div layout="row" layout-align="end">
+                    <md-button class="md-raised md-primary" ng-disabled="loading || autorizador === null" ng-click="AgregarAutorizador($event)">
+                        Agregar
+                    </md-button>
+                </div>
+            </ng-form>
+            <div layout="column" layout-align="space-around stretch">
+                <table class="table table-sm table-hover" layout-padding>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th class="text-left">Autorizador</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="autorizadorItem in autorizadoresRegistrados">
+                            <td class="text-center">
+                                <md-button ng-click="EliminarAutorizador($event, autorizadorItem)" ng-if="!autorizadorItem.esManager">
+                                    <md-icon class="fas fa-times fa-lg"></md-icon>
+                                    Quitar
+                                </md-button>
+                            </td>
+                            <td class="text-left">
+                                <md-button ng-click="EliminarAutorizador($event, autorizadorItem)" ng-disabled="true">
+                                    {{autorizadorItem.vchNombre}}
+                                </md-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+            Salir
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

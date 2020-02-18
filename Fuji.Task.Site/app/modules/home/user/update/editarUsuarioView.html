@@ -1,0 +1,115 @@
+﻿<md-dialog aria-label="Editar Usuario">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Actualización de su Información</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h2>Actualización de información de usuario</h2>
+                <p style="margin-bottom:20px;">Edite la información que desee actualizar, se recomienda cambiar la contraseña aunque no es obligatorio, sin embargo es un requisito ingresarla:</p>
+                <ng-form layout="column" name="FormularioUsuario" layout-padding class="panel-group">
+                    <div class="panel panel-default">
+                        <div layout="column" layout-align="start stretch" class="panel-body">
+                            <md-input-container>
+                                <label>Nombre</label>
+                                <input type="text" name="vchNombre" ng-model="usuario.vchNombre" required />
+                                <div ng-messages="FormularioUsuario.vchNombre.$error" ng-if="FormularioUsuario.vchNombre.$touched">
+                                    <div ng-message="required">Necesita indicar su nombre</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Usuario</label>
+                                <input type="text" name="vchUsuario" ng-model="usuario.vchUsuario" readonly />
+                                <div ng-messages="FormularioUsuario.vchUsuario.$error" ng-if="FormularioUsuario.vchUsuario.$touched">
+                                    <div ng-message="required">Necesita indicar un usuario</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Email</label>
+                                <input type="email" name="vchEmail" ng-model="usuario.vchEmail" readonly />
+                                <div ng-messages="FormularioUsuario.vchEmail.$error" ng-if="FormularioUsuario.vchEmail.$touched">
+                                    <div ng-message="email">No es un correo electrónico válido</div>
+                                    <div ng-message="required">Se requiere asignar un correo electrónico al usuario</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Perfil</label>
+                                <input type="text" name="vchPuesto" ng-model="usuario.vchTipoUsuario" readonly />
+                                <div ng-messages="FormularioUsuario.vchTipoUsuario.$error" ng-if="FormularioUsuario.vchTipoUsuario.$touched">
+                                    <div ng-message="required">Necesita indicar un puesto</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Puesto</label>
+                                <input type="text" name="vchPuesto" ng-model="usuario.vchPuesto" required />
+                                <div ng-messages="FormularioUsuario.vchPuesto.$error" ng-if="FormularioUsuario.vchPuesto.$touched">
+                                    <div ng-message="required">Necesita indicar un puesto</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Tipo de Venta</label>
+                                <input type="text" name="vchPuesto" ng-model="usuario.vchTipoVenta" readonly />
+                                <div ng-messages="FormularioUsuario.vchTipoVenta.$error" ng-if="FormularioUsuario.vchTipoVenta.$touched">
+                                    <div ng-message="required">Necesita indicar un puesto</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Celular</label>
+                                <input type="text" name="vchCelular" ng-model="usuario.vchCelular" required />
+                                <div ng-messages="FormularioUsuario.vchCelular.$error" ng-if="FormularioUsuario.vchCelular.$touched">
+                                    <div ng-message="required">Necesita indicar un numero de celular.</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Extension</label>
+                                <input type="text" name="vchExt" ng-model="usuario.vchExt" required />
+                                <div ng-messages="FormularioUsuario.vchExt.$error" ng-if="FormularioUsuario.vchExt.$touched">
+                                    <div ng-message="required">Necesita indicar una extension telefónica</div>
+                                </div>
+                            </md-input-container>
+                            <div>
+                                <md-checkbox ng-model="ModificarPassword" aria-label="ModificarPasswordLabel">
+                                    Modificar contraseña
+                                </md-checkbox>
+                            </div>
+                            <div ng-if="ModificarPassword" layout="column">
+                                <md-input-container>
+                                    <label>Contraseña</label>
+                                    <input type="password" name="vchPassword" ng-model="usuario.vchPassword" required />
+                                    <div ng-messages="FormularioUsuario.vchPassword.$error" ng-if="FormularioUsuario.vchPassword.$touched">
+                                        <div ng-message="required">Se requiere la contraseña</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container>
+                                    <label>Confirmar contraseña</label>
+                                    <input type="password" name="Confirmacion" ng-model="usuario.Confirmacion" required />
+                                    <div ng-messages="FormularioUsuario.Confirmacion.$error" ng-if="FormularioUsuario.Confirmacion.$touched">
+                                        <div ng-message="required">Se requiere confirmar la contraseña</div>
+                                    </div>
+                                </md-input-container>
+                                <div layout-padding ng-if="usuario.vchPassword !== usuario.Confirmacion && usuario.vchPassword != ''">
+                                    <span style="color: red;">Las contraseñas no coinciden</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+            <md-button class="md-raised md-primary" ng-disabled="(loading || FormularioUsuario.$invalid) || (!ModificarPassword && usuario.vchPassword !== usuario.Confirmacion)" ng-click="EditarUsuario(usuario, $event)">
+                Actualizar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

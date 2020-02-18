@@ -1,0 +1,224 @@
+﻿<md-content layout="row" layout-align="center" ng-cloak>
+    <md-card flex-xs="100" flex-gt-xs="100" flex-gt-sm="100">
+        <md-toolbar md-scroll-shrink>
+            <div class="md-toolbar-tools">
+                <md-menu ng-show="AccessAddCotizacion">
+                    <md-button aria-label="menuAdministracionCotizaciones" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                        <md-icon md-menu-origin class="fas fa-bars fa-2x"></md-icon>
+                    </md-button>
+                    <md-menu-content width="4" >
+                        <md-menu-item >
+                            <md-button ng-click="AgregarCotizacion($event)" ng-disabled="loading">
+                                <md-icon md-menu-align-target class="fas fa-cart-plus fa-2x"></md-icon>
+                                Agregar Cotizacion
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+                <h2 flex md-truncate>
+                    <span>Cotizaciones </span>
+                </h2>
+                <md-button ng-click="toggleRight()" ng-hide="isOpenRight()" ng-disabled="loading" aria-label="btnBuscar">
+                    <md-icon md-menu-align-target class="fas fa-search fa-2x"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear class="md-warn" md-mode="indeterminate" ng-if="loading"></md-progress-linear>
+        <md-card-title style="background: url('app/assets/FFM.png') ; background-size: cover;">
+            <md-card-title-text>
+                <div style="background-color: rgba(255, 255, 255, 0.4);" layout="column" layout-align="space-around stretch">
+                    <md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
+                        <md-toolbar class="md-theme-light">
+                            <h1 class="md-toolbar-tools">Buscar Cotización</h1>
+                        </md-toolbar>
+                        <md-content layout-padding>
+                            <form layout="column">
+                                <md-input-container>
+                                    <label for="nombre">Nombre de la cotización</label>
+                                    <input type="text" ng-model="busqueda.vchNombre" md-autofocus name="nombre">
+                                </md-input-container>
+                                <md-input-container>
+                                    <label for="intCotizacionID">ID Cotización</label>
+                                    <input type="number" ng-model="busqueda.intCotizacionID" md-autofocus name="intCotizacionID">
+                                </md-input-container>
+                                <md-input-container>
+                                    <md-autocomplete md-selected-item="ClienteSelected" required
+                                                     md-selected-item-change="selectedItemChange(cliente)"
+                                                     md-search-text="searchText"
+                                                     md-items="cliente in querySearch(searchText)"
+                                                     md-item-text="cliente.vchNombre"
+                                                     placeholder="cliente"
+                                                     md-no-cache="true">
+                                        <md-item-template>
+                                            <span md-highlight-text="searchText" md-highlight-flags="^i">{{cliente.vchNombre}}</span>
+                                        </md-item-template>
+                                    </md-autocomplete>
+                                </md-input-container>
+                            </form>
+                            <md-button ng-click="BuscarCotizacion($event, busqueda)" class="md-primary" type="submit">
+                                Buscar
+                            </md-button>
+                        </md-content>
+                    </md-sidenav>
+                    <!--Pantalla modo PC-->
+                    <div flex layout="column" class="table-responsive">
+                        <table class="table table-sm table-hover" flex style="font-size:small;">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th class="text-center" >ID</th>
+                                    <th flex class="text-left">Cotización</th>
+                                    <th class="text-left" show-gt-xs hide-xs>Cliente</th>
+                                    <th class="text-left" show-gt-xs hide-xs>Agente Ventas</th>
+                                    <th class="text-center" show-gt-xs hide-xs>Estatus</th>
+                                    <th class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md>Tipo</th>
+                                    <th class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md>Fecha creación</th>
+                                    <th class="text-left" show-gt-xs hide-xs>Activo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="cotizacion in pagedItems[currentPage]">
+                                    <td class="text-center">
+                                        <div style="margin: -5px -5px -15px -5px">
+                                            <md-menu>
+                                                <md-button aria-label="menuFactura" class="md-icon-button" ng-click="abrirMenu($mdOpenMenu, $event)">
+                                                    <md-icon md-menu-origin class="fas fa-bars fa-lg"></md-icon>
+                                                </md-button>
+                                                <md-menu-content>
+                                                    <md-menu-item>
+                                                        <md-button ng-click="ModificarCotizacion($event, cotizacion)">
+                                                            <md-icon class="fas fa-pencil-alt fa-lg"></md-icon>
+                                                            <span ng-show="cotizacion.intUsuarioID == Usuario.intUsuarioID && (cotizacion.intEstatusCotID == 1 || cotizacion.intEstatusCotID == 8 || cotizacion.intEstatusCotID == 2)">Modificar cotizacion</span><span ng-show="cotizacion.intUsuarioID != Usuario.intUsuarioID || (cotizacion.intEstatusCotID != 1 && cotizacion.intEstatusCotID != 8  && cotizacion.intEstatusCotID != 2)">Ver cotizacion</span>
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="cotizacion.intEstatusCotID == 2 && cotizacion.bitAutorizarDesc">
+                                                        <md-button ng-click="AutorizarDescCotizacion($event, cotizacion)">
+                                                            <md-icon class="fas fa-check-circle fa-lg green"></md-icon>
+                                                            Autorizar Descuento
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="cotizacion.intEstatusCotID == 2 && cotizacion.bitAutorizarDesc">
+                                                        <md-button ng-click="RechazarDescCotizacion($event, cotizacion)">
+                                                            <md-icon md-menu-align-target class="fas fa-times fa-lg red"></md-icon>
+                                                            Rechazar Descuento
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="(cotizacion.intEstatusCotID == 1 || cotizacion.intEstatusCotID == 4 || cotizacion.intEstatusCotID == 4) && cotizacion.intUsuarioID == Usuario.intUsuarioID">
+                                                        <md-button ng-click="EnviarCotizacion($event, cotizacion)">
+                                                            <md-icon class="fas fa-envelope-open-text fa-lg green"></md-icon>
+                                                            Enviar al cliente
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="(cotizacion.intEstatusCotID == 5) && cotizacion.intUsuarioID == Usuario.intUsuarioID">
+                                                        <md-button ng-click="ClienteAceptaCotizacion($event, cotizacion)">
+                                                            <md-icon class="fas fa-thumbs-up fa-lg blue"></md-icon>
+                                                            Cliente Acepta
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="(cotizacion.intEstatusCotID == 6) && cotizacion.intUsuarioID == Usuario.intUsuarioID">
+                                                        <md-button ng-click="AprobacionJefeDirecto($event, cotizacion)" ng-disabled="loading">
+                                                            <md-icon md-menu-align-target class="fas fa-hand-holding-usd fa-2x blue"></md-icon>
+                                                            Solicitar Aprobación
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="(cotizacion.intEstatusCotID == 7) && cotizacion.bitAutorizarCot">
+                                                        <md-button ng-click="AutorizarCotJefe($event, cotizacion)">
+                                                            <md-icon class="fas fa-check fa-lg green"></md-icon>
+                                                            Autorizar Cotización
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="(cotizacion.intEstatusCotID == 7) && cotizacion.bitAutorizarCot">
+                                                        <md-button ng-click="RechazarCotJefe($event, cotizacion)">
+                                                            <md-icon class="fab fa-creative-commons-nc fa-lg red"></md-icon>
+                                                            Rechazar Cotización
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="(cotizacion.intEstatusCotID == 9) && ClienteCompleto">
+                                                        <md-button ng-click="EnviarComite($event, cotizacion)">
+                                                            <md-icon class="fas fa-user-tie fa-lg blue"></md-icon>
+                                                            Enviar a Comité
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="(cotizacion.intEstatusCotID == 10)">
+                                                        <md-button ng-click="RechazadaComite($event, cotizacion)">
+                                                            <md-icon class="fab fa-creative-commons-nc fa-lg red"></md-icon>
+                                                            Rechazada por Comité
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="(cotizacion.intEstatusCotID == 10)">
+                                                        <md-button ng-click="AutorizadaComite($event, cotizacion)">
+                                                            <md-icon class="fas fa-check fa-lg green"></md-icon>
+                                                            Aprobada por Comité
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="(cotizacion.intEstatusCotID == 12)">
+                                                        <md-button ng-click="Formalizada($event, cotizacion)">
+                                                            <md-icon class="fas fa-check-double fa-lg turquesa"></md-icon>
+                                                            Formalizada
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item>
+                                                        <md-button ng-click="Historial($event, cotizacion)">
+                                                            <md-icon class="fas fa-history fa-lg turquesa"></md-icon>
+                                                            Historial
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="cotizacion.intUsuarioID == Usuario.intUsuarioID">
+                                                        <md-button ng-show='cotizacion.bitActive' ng-click="EliminarCotizacion($event, cotizacion)">
+                                                            <md-icon class="fas fa-times fa-lg"></md-icon>
+                                                            Desactivar
+                                                        </md-button>
+                                                        <md-button ng-show='!cotizacion.bitActive' ng-click="EliminarCotizacion($event, cotizacion)">
+                                                            <md-icon class="fas fa-check fa-lg"></md-icon>
+                                                            Activar
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span ng-show="((cotizacion.intEstatusCotID == 2 && cotizacion.bitAutorizarDesc) || (cotizacion.intEstatusCotID == 7 && cotizacion.bitAutorizarCot)) "><i class="fas fa-hand-holding-usd red fa-pulse" style="color:red" title="Requiere autorización"></i></span>
+                                        <div hide-gt-sm=""><md-icon class="{{cotizacion.vchClassIcon}}" title="{{cotizacion.vchEstatusCot}}"></div>
+                                    </td>
+                                    <td class="text-center green" style="font-weight:bold"> {{cotizacion.intCotizacionID}}</td>
+                                    <td flex class="text-left">{{cotizacion.vchNombre}}</td>
+                                    <td class="text-left" show-gt-xs hide-xs> {{cotizacion.vcNombreCliente}}</td>
+                                    <td class="text-left" show-gt-xs hide-xs> {{cotizacion.vchNombreUsuario}}</td>
+                                    <td class="text-center" show-gt-xs hide-xs><md-icon class="{{cotizacion.vchClassIcon}}" title="{{cotizacion.vchEstatusCot}}"></md-icon></td>
+                                    <td class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md> {{cotizacion.vchTipoCotizacion}}</td>
+                                    <td class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md> {{cotizacion.datCreation | date}}</td>
+                                    <td class="text-center" show-gt-xs hide-xs>
+                                        <span ng-show='cotizacion.bitActive'><i class="fas fa-check red" style="color:green"></i></span>
+                                        <span ng-show='!cotizacion.bitActive'><i class="fas fa-times green" style="color:red"></i></span>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="9">
+                                        <div class="text-center">
+                                            <ul class="pagination">
+                                                <li ng-class="{disabled: currentPage == 0}">
+                                                    <a href="javascript:;" ng-click="prevPage()">« Prev</a>
+                                                </li>
+                                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()" style="color: #4CAF50 !important;">
+                                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                                </li>
+                                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                                    <a href="javascript:;" ng-click="nextPage()">Next »</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </md-card-title-text>
+        </md-card-title>
+    </md-card>
+</md-content>

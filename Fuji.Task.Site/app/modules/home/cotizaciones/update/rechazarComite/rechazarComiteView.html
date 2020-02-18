@@ -1,0 +1,34 @@
+﻿<md-dialog aria-label="Rechazar Descuento a cotización">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Observaciones de rechazo</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <p>Completar las observaciones para rechazar la cotización: {{cotizacion.vchNombre}}</p>
+            <ng-form layout="column" name="FormularioCotAut" layout-padding>
+                <md-input-container flex>
+                    <label>Observaciones</label>
+                    <textarea flex type="text" name="observaciones" ng-model="cotizacion.vchObsRecComite" required></textarea>
+                    <div ng-messages="FormularioCotAut.observaciones.$error" ng-if="FormularioCotAut.observaciones.$touched">
+                        <div ng-message="required">Necesita indicar las observaciones del rechazo de la cotización</div>
+                    </div>
+                </md-input-container>
+            </ng-form>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+            Salir
+        </md-button>
+        <md-button class="md-raised" ng-disabled="loading || FormularioCotAut.$invalid" ng-click="RechazadaComite($event, cotizacion)">
+            Rechazar
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

@@ -1,0 +1,89 @@
+﻿<md-dialog aria-label="Agregar Evento">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Agregar Evento</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-close fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h2>Agregar un nuevo evento</h2>
+                <p style="margin-bottom:20px;">Complete la siguiente información para agregar un nuevo evento al sistema:</p>
+                <ng-form layout="column" name="FormularioEvento" layout-padding class="panel-group">
+                    <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                        <div layout="column" layout-align="start stretch" class="panel-body">
+                            <md-input-container>
+                                <label>Nombre</label>
+                                <input type="text" name="vchNombre" ng-model="event.vchNombre" required />
+                                <div ng-messages="FormularioEvento.vchNombre.$error" ng-if="FormularioEvento.vchNombre.$touched">
+                                    <div ng-message="required">Necesita indicar el nombre de la persona a quien se le va asignar el usuario</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Línea de Productos</label>
+                                <md-select ng-model="event.intLineaProdID" [width]="'100%'" name="intLineaProdID" required>
+                                    <md-option ng-repeat="linea in lineas" ng-value="linea.intLineaProdID">
+                                        {{linea.vchLinea}}
+                                    </md-option>
+                                </md-select>
+                                <div ng-messages="FormularioEvento.intLineaProdID.$error" ng-if="FormularioEvento.intLineaProdID.$touched">
+                                    <div ng-message="required">Necesitas seleccionar la linea lider para el evento</div>
+                                </div>
+                            </md-input-container>
+                            <div>
+                                <label>Fecha de Evento </label>
+                                <md-input-container>
+                                    <label>Fecha inicial </label>
+                                    <md-datepicker ng-model="event.datFechaInicio" name="datFechaInicio" md-max-date="event.datFechaFin" required></md-datepicker>
+                                    <div ng-messages="FormularioEvento.datFechaInicio.$error" ng-if="FormularioEvento.datFechaInicio.$touched">
+                                        <div ng-message="required">Necesitas seleccionar una fecha de inicio</div>
+                                    </div>
+                                </md-input-container>
+                                <md-input-container>
+                                    <label>Fecha final</label>
+                                    <md-datepicker ng-model="event.datFechaFin" name="datFechaFin" md-min-date="event.datFechaInicio" required></md-datepicker>
+                                    <div ng-messages="FormularioEvento.datFechaFin.$error" ng-if="FormularioEvento.datFechaFin.$touched">
+                                        <div ng-message="required">Necesitas seleccionar una fecha de inicio</div>
+                                    </div>
+                                </md-input-container>
+                            </div>
+                            <div layout="row" layout-align="center center">
+                                <div layout="column">
+                                    <label for="file-pdf" ng-style="LabelPdf" style="border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer;">
+                                        <i ng-class="ArchivoPdf.name.length > 0 ? 'fas fa-check' : 'fas fa-cloud-upload-alt'"></i><span style="margin-left:10px;">Cargar imagen del evento</span>
+                                    </label>
+                                    <p style="margin-left:2px; font-size:10px;" ng-if="ArchivoPdf.name.length > 0">{{ArchivoPdf.name}}</p>
+                                </div>
+                                <input id="file-pdf" type="file" accept=".png" custom-on-change="uploadImagen" style="display: none;" />
+                            </div>
+                            <md-input-container>
+                                <label>Lugar</label>
+                                <input type="text" name="vchLugar" ng-model="event.vchLugar" required />
+                                <div ng-messages="FormularioEvento.vchLugar.$error" ng-if="FormularioEvento.vchLugar.$touched">
+                                    <div ng-message="required">Necesita indicar el lugar del evento</div>
+                                </div>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>Asociación</label>
+                                <input type="text" name="vchAsociacion" ng-model="event.vchAsociacion" />
+                            </md-input-container>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+            <md-button class="md-raised md-primary" ng-disabled="loading || FormularioEvento.$invalid || !File" ng-click="AgregarEvento(event, $event)">
+                Agregar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

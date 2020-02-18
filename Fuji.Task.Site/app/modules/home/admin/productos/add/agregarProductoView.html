@@ -1,0 +1,155 @@
+﻿<md-dialog aria-label="Agregar Usuario">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Agregar Producto</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h2>Agregar un nuevo producto</h2>
+                <p style="margin-bottom:20px;">Complete la siguiente información para agregar un nuevo producto al sistema:</p>
+                <ng-form layout="column" name="FormularioProducto" layout-padding>
+                    <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                        <div layout="column" layout-align="start stretch" class="panel-body">
+                            <div layout="row" layout-xs="column">
+                                <div class="panel" layout="column" layout-align="start stretch" flex="">
+                                    <div>
+                                        <md-checkbox ng-model="producto.bitMostrar" aria-label="FormarPaquete">
+                                            Para Formar paquete
+                                        </md-checkbox>
+                                    </div>
+                                    <md-input-container>
+                                        <label>Línea de productos</label>
+                                        <md-select ng-model="producto.intLineaProdID" name="intLineaProdID">
+                                            <md-option ng-repeat="linea in lineas" ng-value="linea.intLineaProdID">
+                                                {{linea.vchLinea}}
+                                            </md-option>
+                                        </md-select>
+                                        <div ng-messages="FormularioProducto.intLineaProdID.$error" ng-if="FormularioProducto.intLineaProdID.$touched">
+                                            <div ng-message="required">Necesitas seleccionar la línea de productos</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container>
+                                        <label>Nombre</label>
+                                        <input type="text" name="vchNombreProducto" ng-model="producto.vchNombreProducto" required />
+                                        <div ng-messages="FormularioProducto.vchNombreProducto.$error" ng-if="FormularioProducto.vchNombreProducto.$touched">
+                                            <div ng-message="required">Necesita indicar el nombre de la persona a quien se le va asignar el producto</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container ng-show="!producto.bitMostrar">
+                                        <label>Código SAP</label>
+                                        <input type="text" name="vchCodigoProd" ng-model="producto.vchCodigoProd" />
+                                        <div ng-messages="FormularioProducto.vchCodigoProd.$error" ng-if="FormularioProducto.vchCodigoProd.$touched">
+                                            <div ng-message="required">Se requiere asignar un código sap.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container ng-show="!producto.bitMostrar">
+                                        <label>Tipo de Unidad</label>
+                                        <md-select ng-model="producto.intUnidadID" name="intUnidadID">
+                                            <md-option ng-repeat="unidad in unidades" ng-value="unidad.intUnidadID">
+                                                {{unidad.vchUnidad}}
+                                            </md-option>
+                                        </md-select>
+                                        <div ng-messages="FormularioProducto.intUnidadID.$error" ng-if="FormularioProducto.intUnidadID.$touched">
+                                            <div ng-message="required">Necesitas seleccionar la línea de productos</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container ng-show="!producto.bitMostrar">
+                                        <label>Cantidad</label>
+                                        <input type="number" name="intCantidad" ng-model="producto.intCantidad" />
+                                        <div ng-messages="FormularioProducto.intCantidad.$error" ng-if="FormularioProducto.intCantidad.$touched">
+                                            <div ng-message="required">Necesita indicar el la cantidad de acuerdo a la unidad.</div>
+                                        </div>
+                                    </md-input-container>
+                                </div>
+                                <div class="panel" layout="column" layout-align="start stretch" flex="">
+                                    <div>
+                                        <md-checkbox ng-model="producto.bitBusqueda" aria-label="BusquedaFolletoLabel">
+                                            Permitir Búsqueda
+                                        </md-checkbox>
+                                    </div>
+                                    <md-input-container>
+                                        <label>Tipo de Producto</label>
+                                        <md-select ng-model="producto.intTipoProductoID" name="intTipoProductoID">
+                                            <md-option ng-repeat="tipop in tiposP" ng-value="tipop.intTipoProductoID" required>
+                                                {{tipop.vchProducto}}
+                                            </md-option>
+                                        </md-select>
+                                        <div ng-messages="FormularioProducto.intTipoProductoID.$error" ng-if="FormularioProducto.intTipoProductoID.$touched">
+                                            <div ng-message="required">Necesitas seleccionar el tipo de producto</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container ng-show="!producto.bitMostrar">
+                                        <label>Costo Unitario</label>
+                                        <input type="number" name="decCostoUnitario" ng-model="producto.decCostoUnitario" min="0" ng-required="!producto.bitMostrar" />
+                                        <div ng-messages="FormularioProducto.decCostoUnitario.$error" ng-if="FormularioProducto.decCostoUnitario.$touched">
+                                            <div ng-message="required">Necesita indicar el nombre el costo del producto</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container>
+                                        <label>Descripción</label>
+                                        <textarea name="vchDescripcionProd" ng-model="producto.vchDescripcionProd" ng-required="!producto.bitMostrar" />
+                                        <div ng-messages="FormularioProducto.vchDescripcionProd.$error" ng-if="FormularioProducto.vchDescripcionProd.$touched">
+                                            <div ng-message="required">Agregar una descripción.</div>
+                                        </div>
+                                    </md-input-container>
+                                    <div layout="row" layout-align="center center">
+                                        <div layout="column">
+                                            <label for="file-png" ng-style="LabelImagen" style="border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer;">
+                                                <i ng-class="ImagenProd.name.length > 0 ? 'fas fa-check' : 'fas fa-cloud-upload-alt'"></i><span style="margin-left:10px;">Cargar imagen del producto</span>
+                                            </label>
+                                            <p style="margin-left:2px; font-size:10px;" ng-if="ImagenProd.name.length > 0">{{ImagenProd.name}}</p>
+                                        </div>
+                                        <input id="file-png" type="file" accept=".png,.jpg,.jpeg" custom-on-change="uploadImagenProd" style="display: none;" />
+                                    </div>
+                                    <div>
+                                        <md-checkbox ng-model="bitFolleto" aria-label="ContieneFolletoLabel">
+                                            Contiene Folleto
+                                        </md-checkbox>
+                                    </div>
+                                    <div ng-show="bitFolleto" layout="row" layout-align="center center">
+                                        <div layout="column">
+                                            <label for="file-pdf" ng-style="LabelPdf" style="border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer;">
+                                                <i ng-class="Folleto.name.length > 0 ? 'fas fa-check' : 'fas fa-cloud-upload-alt'"></i><span style="margin-left:10px;">Cargar folleto del producto</span>
+                                            </label>
+                                            <p style="margin-left:2px; font-size:10px;" ng-if="Folleto.name.length > 0">{{Folleto.name}}</p>
+                                        </div>
+                                        <input id="file-pdf" type="file" accept=".pdf" custom-on-change="uploadFolleto" style="display: none;" />
+                                    </div>
+                                    <div>
+                                        <md-checkbox ng-show="bitFolleto && File" ng-model="bitOtroFolleto" aria-label="ContieneOtroFolletoLabel">
+                                            Otro Folleto
+                                        </md-checkbox>
+                                    </div>
+                                    <div ng-show="bitOtroFolleto && File" layout="row" layout-align="center center">
+                                        <div layout="column">
+                                            <label for="file-pdfOtro" ng-style="LabelOtroPdf" style="border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer;">
+                                                <i ng-class="FolletoOtro.name.length > 0 ? 'fas fa-check' : 'fas fa-cloud-upload-alt'"></i><span style="margin-left:10px;">Cargar otro folleto del producto</span>
+                                            </label>
+                                            <p style="margin-left:2px; font-size:10px;" ng-if="FolletoOtro.name.length > 0">{{FolletoOtro.name}}</p>
+                                        </div>
+                                        <input id="file-pdfOtro" type="file" accept=".pdf" custom-on-change="uploadFolletoOtro" style="display: none;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+            <md-button class="md-raised md-primary" ng-disabled="loading || FormularioProducto.$invalid || (producto.bitFolleto && !File)" ng-click="AgregarProducto(producto, $event)">
+                Agregar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

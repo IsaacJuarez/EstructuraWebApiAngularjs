@@ -1,0 +1,30 @@
+﻿<div ng-controller="homeController" layout="row" layout-align="center center">
+    <div show-gt-xs hide-xs>
+        <span style="font-family: 'Khula', sans-serif; font-size:18px;">{{Globals.CurrentUser.vchNameUser}}</span>
+    </div>
+    <md-menu>
+        <md-button aria-label="menu-home" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+            <md-icon md-menu-origin class="fa fa-user fa-2x"></md-icon>
+        </md-button>
+        <md-menu-content width="3">
+            <md-menu-item ng-if="Globals.CurrentUser.Perfil === 1">
+                <md-button ng-click="AdministrarUsuarios($event)">
+                    <md-icon class="fa fa-users fa-2x" md-menu-align-target></md-icon>
+                    Administrar Otros Usuarios
+                </md-button>
+            </md-menu-item>
+            <md-menu-item>
+                <md-button ng-click="EditarUsuario($event)">
+                    <md-icon class="fa fa-wrench fa-2x" md-menu-align-target></md-icon>
+                    Editar usuario
+                </md-button>
+            </md-menu-item>
+            <md-menu-item>
+                <md-button href="#/login">
+                    <md-icon class="fa fa-sign-out fa-2x" md-menu-align-target></md-icon>
+                    Salir
+                </md-button>
+            </md-menu-item>
+        </md-menu-content>
+    </md-menu>
+</div>

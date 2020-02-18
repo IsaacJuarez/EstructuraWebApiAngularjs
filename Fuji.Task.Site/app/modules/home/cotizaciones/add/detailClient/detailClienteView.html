@@ -1,0 +1,109 @@
+﻿<md-dialog aria-label="Edición cliente">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{cliente.vchNombre}}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div class="panel-body" layout="column">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>Nombre:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchNombre}}</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>Email:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchEmail}}</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>RFC:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchRFC}}</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>Agente de Ventas:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchAgenteVentas}}</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>Tipo de Cliente:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchTipoPrecio}}</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>Agente de Cobranza:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchAgenteCobranza}}</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>Calle y Numero:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchAgenteCobranza}}</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>Colonia:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchColonia}}</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>Codigo Postal:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchCodigoPostal}}</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>Estado:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchEstado}}</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>Municipio:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchMunicipio}}</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>Poblacion:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchColonia}}</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>Teléfono:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchTelefono}}</span>
+                    </div>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon primary" style="min-width:200px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                            <strong>Fax:</strong>
+                        </span>
+                        <span class="form-control">{{cliente.vchFax}}</span>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

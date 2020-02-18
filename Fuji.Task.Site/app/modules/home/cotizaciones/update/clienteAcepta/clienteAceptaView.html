@@ -1,0 +1,46 @@
+﻿<md-dialog aria-label="Observaciones de recha">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Tipo de propuesta</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <p>Seleccionar una opción de propuesta para la cotización: {{cotizacion.vchNombre}}</p>
+            <ng-form layout="column" name="FormularioTipoVenta" layout-padding>
+                <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <td>Cotizacion</td>
+                                <td>Seleccionar</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="tipoV in TipoVenta">
+                                <td>{{tipoV.tipo}} &nbsp;&nbsp;<small ng-show="tipoV.ID > 2">{{tipoV.Plazo}} Meses</small></td>
+                                <td class="text-center">
+                                    <md-checkbox ng-model="tipoV.Seleccion" ng-change="Seleccion(tipoV)" aria-label="CheckboxSel">
+                                    </md-checkbox>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </ng-form>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+            Salir
+        </md-button>
+        <md-button class="md-raised" ng-disabled="loading || FormularioTipoVenta.$invalid" ng-click="AceptacionCliente($event, cotizacion)">
+            Seleccionar
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

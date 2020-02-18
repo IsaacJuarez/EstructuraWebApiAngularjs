@@ -1,0 +1,95 @@
+﻿<md-dialog aria-label="Agregar Evento">
+    <form>
+        <md-toolbar md-scroll-shrink>
+            <div class="md-toolbar-tools">
+                <h2>Promociones </h2>
+                <span flex></span>
+                <div>
+                    <md-button ng-click="toggleRight()" ng-hide="isOpenRight()" ng-disabled="loading" aria-label="btnBuscar">
+                        <md-icon md-menu-align-target class="fa fa-plus fa-2x"></md-icon>
+                    </md-button>
+                    <md-button class="md-icon-button" ng-click="cancel()">
+                        <md-icon class="fas fa-close fa-2x" aria-label="Close dialog"></md-icon>
+                    </md-button>
+                </div>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div flex class="md-dialog-content">
+                <h2>Promociones para {{event.vchNombre}}</h2>
+                <ng-form layout="column" flex name="FormularioEvento" layout-padding class="panel-group">
+                    <md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
+                        <md-toolbar class="md-theme-light">
+                            <h1 class="md-toolbar-tools">Agregar Promociones</h1>
+                        </md-toolbar>
+                        <md-content layout-padding>
+                            <div flex layout="column" layout-align="start stretch">
+                                <md-input-container flex>
+                                    <label for="testInput">Texto a mostrar</label>
+                                    <input type="text" ng-model="promo.vchPromocion" md-autofocus name="vchPromocion">
+                                </md-input-container>
+                                <md-input-container flex>
+                                    <label>Fecha final</label>
+                                    <md-datepicker ng-model="busqueda2.datFecha" name="datFecVigencia" md-min-date="busqueda.datFecVigencia"></md-datepicker>
+                                </md-input-container>
+                                <div layout="row" layout-align="center center">
+                                    <div layout="column">
+                                        <label for="file-pdf" ng-style="LabelPdf" style="border: 1px solid #ccc; display: inline-block; padding: 6px 12px; cursor: pointer;">
+                                            <i ng-class="ArchivoPdf.name.length > 0 ? 'fas fa-check' : 'fas fa-cloud-upload-alt'"></i><span style="margin-left:10px;">Cargar imagen del evento</span>
+                                        </label>
+                                        <p style="margin-left:2px; font-size:10px;" ng-if="ArchivoPdf.name.length > 0">{{ArchivoPdf.name}}</p>
+                                    </div>
+                                    <input id="file-pdf" type="file" accept=".png" custom-on-change="uploadImagen" style="display: none;" />
+                                </div>
+                                <div class="text-right">
+                                    <md-button ng-click="AddPromotion($event)" class="md-primary" type="submit" aria-label="beButton2">
+                                        <md-icon md-menu-align-target class="fa fa-search fa-2x"></md-icon>
+                                    </md-button>
+                                </div>
+                            </div>
+                        </md-content>
+                    </md-sidenav>
+                    <div flex layout="row" layout-align="start start" layout-xs="column" layout-align-xs="space-around stretch" layout-sm="column" layout-align-sm="space-around stretch" layout-md="column" layout-align-md="space-around stretch">
+                        <md-card flex class="col-lg-3 col-sm-12 animated fadeIn delay-1s" ng-repeat="prom in Promotions">
+                            <!--<img src="app/assets/FFM.png" class="md-card-image" alt="Washed Out" style="max-height:30px;">-->
+                            <md-card-title flex class="blue">
+                                <md-card-title-text>
+                                    <span class="md-headline">Promoción</span>
+                                </md-card-title-text>
+                            </md-card-title>
+                            <md-card-content flex>
+                                <p ng-show="!prom.bitEdit">
+                                    {{prom.vchPromocion}}
+                                </p>
+                                <textarea ng-show="prom.bitEdit" ng-model="prom.vchPromocion"></textarea>
+                            </md-card-content>
+                            <md-card-actions flex layout="row" layout-align="end center">
+                                <md-button class="md-icon-button" aria-label="ViewPicture" title="Ver Promoción">
+                                    <md-icon class="fas fa-file-image green"></md-icon>
+                                </md-button>
+                                <md-button ng-show="!prom.bitEdit" class="md-icon-button" ng-click="EditPromocion(prom)" aria-label="EditPromo" title="Editar Promoción">
+                                    <md-icon class="fas fa-pen blue"></md-icon>
+                                </md-button>
+                                <md-button ng-show="prom.bitEdit" class="md-icon-button" ng-click="EditPromocion(prom)" aria-label="SavePromo" title="Guardar Promoción">
+                                    <md-icon class="fas fa-save blue"></md-icon>
+                                </md-button>
+                                <md-button ng-show="prom.bitEdit" class="md-icon-button" ng-click="EditPromocion(prom)" aria-label="CancelPromo" title="Cancelar">
+                                    <md-icon class="fas fa-times orange"></md-icon>
+                                </md-button>
+                                <md-button class="md-icon-button" aria-label="DeletePromo" title="Eliminar Promoción">
+                                    <md-icon class="fas fa-minus-circle red"></md-icon>
+                                </md-button>
+                            </md-card-actions>
+                        </md-card>
+                    </div>
+                </ng-form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -1,0 +1,36 @@
+﻿<md-dialog aria-label="Agregar Usuario">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Autorizar Alta de Dirección.</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h2>Se requiere la autorización para la dirección de entrega</h2>
+                <p style="margin-bottom:20px;">Cotizacion {{dir.intCotizacionID}}: {{dir.vchNombreCotizacion}}</p>
+                    <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                        <div layout="column" layout-align="start stretch" class="panel-body">
+                            <p>{{dir.vchCalleyNum}}, {{dir.vchColonia}}, {{dir.vchColoniaCP}}, {{dir.vchMunicipio}}, {{dir.vchEstado}}   </p>
+                        </div>
+                    </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+            <md-button ng-show="dir.intUsuarioAut <= 0" class="md-raised" style="color: red;" ng-disabled="loading" ng-click="AutorizarDireccion(dir, $event,0)">
+                Rechazar
+            </md-button>
+            <md-button ng-show="dir.intUsuarioAut <= 0" class="md-raised md-primary" ng-disabled="loading" ng-click="AutorizarDireccion(dir, $event, 1)">
+                Autorizar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

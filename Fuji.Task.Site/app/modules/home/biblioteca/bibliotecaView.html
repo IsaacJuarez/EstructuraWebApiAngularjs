@@ -1,0 +1,9 @@
+﻿<md-progress-linear class="md-warn" md-mode="indeterminate" ng-if="loading"></md-progress-linear>
+<md-content layout="column" layout-align="space-around stretch" ng-cloak class="md-padding" layout-xs="column">
+    <div id="wrappermodal" layout="row" layout-align="center stretch" hide-sm hide-xs show-gt-sm>
+        <iframe id="iFrame"  ng-src="http://cotizador.itmedical.com.mx:9030/BDCONOCIMIENTO/"  style="width:100%; height:600px;" ></iframe>
+    </div>
+    <div id="wrapperlarge" layout="row" layout-align="stretch" show-sm hide-gt-sm>
+        <iframe id="iFrame" ng-src="http://cotizador.itmedical.com.mx:9030/BDCONOCIMIENTO/" frameborder="0" scrolling="no" onload="resizeIframe(this)" style="width:100%; height:100%;"></iframe>
+    </div>
+</md-content>

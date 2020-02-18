@@ -1,0 +1,180 @@
+<md-content layout="row" layout-align="center" ng-cloak>
+    <md-card flex-xs="100" flex-gt-xs="100" flex-gt-sm="100">
+        <md-toolbar md-scroll-shrink>
+            <div class="md-toolbar-tools">
+                <md-menu>
+                    <md-button aria-label="menuAdministracionProductos" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                        <md-icon md-menu-origin class="fas fa-bars fa-2x"></md-icon>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item ng-show="AccessAddProd">
+                            <md-button ng-click="AgregarProducto($event)" ng-disabled="loading">
+                                <md-icon md-menu-align-target class="fas fa-plus fa-2x"></md-icon>
+                                Agregar producto
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+                <h2 flex md-truncate>
+                    <span>Administración de Productos</span>
+                </h2>
+                <md-button ng-click="toggleRight()" ng-hide="isOpenRight()" ng-disabled="loading" aria-label="btnBuscar">
+                    <md-icon md-menu-align-target class="fas fa-search fa-2x"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear class="md-warn" md-mode="indeterminate" ng-if="loading"></md-progress-linear>
+        <md-card-title style="background: url('app/assets/FFM.png') ; background-size: cover;">
+            <md-card-title-text>
+                <div style="background-color: rgba(255, 255, 255, 0.4);" layout="column" layout-align="space-around stretch">
+                    <md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
+                        <md-toolbar class="md-theme-light">
+                            <h1 class="md-toolbar-tools">Buscar producto</h1>
+                        </md-toolbar>
+                        <md-content layout-padding>
+                            <form layout="column">
+                                <md-input-container>
+                                    <label for="testInput">Nombre del Producto</label>
+                                    <input type="text" ng-model="busqueda.vchNombreProducto" md-autofocus name="vchNombreProducto">
+                                </md-input-container>
+                                <md-input-container>
+                                    <label>Linea de Productos</label>
+                                    <md-select ng-model="busqueda.intLineaProdID" name="bintLineaProdID">
+                                        <md-option ng-repeat="linea in lineas" ng-value="linea.intLineaProdID">
+                                            {{linea.vchLinea}}
+                                        </md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </form>
+                            <md-button ng-click="BuscarProducto($event, busqueda)" class="md-primary" type="submit">
+                                Buscar
+                            </md-button>
+                        </md-content>
+                    </md-sidenav>
+                    <!--Pantalla modo PC-->
+                    <div layout="column" layout-align="space-around stretch">
+                        <table class="table table-sm table-hover" layout-padding style="font-size:small;">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th class="text-left">Nombre</th>
+                                    <th class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md>Descripción</th>
+                                    <th class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md>Codigo SAP</th>
+                                    <th class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md>Linea</th>
+                                    <th class="text-left">Costo Unitario</th>
+                                    <th class="text-center" show-gt-lg hide-sm hide-xs show-md show-gt-md>Imagen</th>
+                                    <th class="text-center" show-gt-lg hide-sm hide-xs show-md show-gt-md>Folleto</th>
+                                    <th class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md>Fecha creación</th>
+                                    <th class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md>Activo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="producto in pagedItems[currentPage]">
+                                    <td class="text-center">
+                                        <div style="margin: -5px -5px -15px -5px">
+                                            <md-menu>
+                                                <md-button aria-label="menuFactura" class="md-icon-button" ng-click="abrirMenu($mdOpenMenu, $event)">
+                                                    <md-icon md-menu-origin class="fas fa-bars fa-lg"></md-icon>
+                                                </md-button>
+                                                <md-menu-content>
+                                                    <md-menu-item ng-show="AccessAddProd">
+                                                        <md-button ng-click="ModificarProducto($event, producto)">
+                                                            <md-icon class="fas fa-pencil-alt fa-lg"></md-icon>
+                                                            Modificar producto
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="AccessAddProd">
+                                                        <md-button ng-click="ModificarPrecios($event, producto)">
+                                                            <md-icon class="fas fa-dollar-sign fa-lg"></md-icon>
+                                                            Lista de Precios
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="AccessAddProd">
+                                                        <md-button ng-click="PaqueteProductos($event, producto)">
+                                                            <md-icon class="fas fa-box-open fa-lg"></md-icon>
+                                                            Paquete de productos
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="producto.bitFolleto" hide-gt-sm>
+                                                        <md-button ng-click="VerFolleto($event, producto)">
+                                                            <md-icon class="fas fa-file-pdf fa-lg"></md-icon>
+                                                            Ver PDF
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="producto.bitFileOtro" hide-gt-sm>
+                                                        <md-button ng-click="VerFolletoOtro($event, producto)">
+                                                            <md-icon class="fas fa-file-pdf fa-lg"></md-icon>
+                                                            Ver Otro PDF
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="producto.bitFile" hide-gt-sm>
+                                                        <md-button ng-click="VerProducto($event, producto)">
+                                                            <md-icon class="fas fa-image fa-lg"></md-icon>
+                                                            Ver Imagen
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                    <md-menu-item ng-show="AccessAddProd">
+                                                        <md-button ng-show='producto.bitActive' ng-click="EliminarProducto($event, producto)">
+                                                            <md-icon class="fas fa-times fa-lg"></md-icon>
+                                                            Desactivar
+                                                        </md-button>
+                                                        <md-button ng-show='!producto.bitActive' ng-click="EliminarProducto($event, producto)">
+                                                            <md-icon class="fas fa-check fa-lg"></md-icon>
+                                                            Activar
+                                                        </md-button>
+                                                    </md-menu-item>
+                                                </md-menu-content>
+                                            </md-menu>
+                                        </div>
+                                    </td>
+                                    <td class="text-left"> {{producto.vchNombreProducto}}</td>
+                                    <td class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md> {{producto.vchDescripcionProd}}</td>
+                                    <td class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md> {{producto.vchCodigoProd}}</td>
+                                    <td class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md> {{producto.vchLinea}}</td>
+                                    <td class="text-left"> {{producto.decCostoUnitario}}</td>
+                                    <td class="text-center" show-gt-lg hide-sm hide-xs show-md show-gt-md>
+                                        <md-button ng-show="producto.bitFile" ng-click="VerProducto($event, producto)" title="Ver Imagen del Producto" aria-label="btnImgProd">
+                                            <md-icon class="fas fa-image fa-lg"></md-icon>
+                                        </md-button>
+                                    </td>
+                                    <td class="text-center" show-gt-lg hide-sm hide-xs show-md show-gt-md>
+                                        <md-button ng-show="producto.bitFolleto" ng-click="VerFolleto($event, producto)" title="Ver folleto" aria-label="btnFolletoProd">
+                                            <md-icon class="fas fa-file-pdf fa-lg"></md-icon>
+                                        </md-button>
+                                        <md-button ng-show="producto.bitFileOtro" ng-click="VerFolletoOtro($event, producto)" title="Ver otro Folleto" aria-label="btnOtroFolletoProd">
+                                            <md-icon class="fas fa-file-pdf fa-lg"></md-icon>
+                                        </md-button>
+                                    </td>
+                                    <td class="text-left" show-gt-lg hide-sm hide-xs show-md show-gt-md> {{producto.datCreation | date}}</td>
+                                    <td class="text-center" show-gt-lg hide-sm hide-xs show-md show-gt-md>
+                                        <span ng-show='producto.bitActive'><i class="fas fa-check red" style="color:green"></i></span>
+                                        <span ng-show='!producto.bitActive'><i class="fas fa-times green" style="color:red"></i></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="9">
+                                        <div class="text-center">
+                                            <ul class="pagination">
+                                                <li ng-class="{disabled: currentPage == 0}">
+                                                    <a href="javascript:;" ng-click="prevPage()">« Prev</a>
+                                                </li>
+                                                <li ng-repeat="n in range(pagedItems.length)" ng-class="{active: n == currentPage}" ng-click="setPage()" style="color: #4CAF50 !important;">
+                                                    <a href="javascript:;" ng-bind="n + 1">1</a>
+                                                </li>
+                                                <li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+                                                    <a href="javascript:;" ng-click="nextPage()">Next »</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </md-card-title-text>
+        </md-card-title>
+    </md-card>
+</md-content>

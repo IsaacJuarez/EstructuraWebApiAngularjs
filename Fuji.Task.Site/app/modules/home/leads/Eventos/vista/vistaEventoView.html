@@ -1,0 +1,112 @@
+﻿<md-dialog aria-label="Vista Previa del Reporte">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2>Información del evento {{evento.vchNombre}}</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon class="fas fa-times-circle fa-2x" aria-label="Close dialog"></md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+    <md-dialog-content>
+        <div flex id="wrappermodal" layout="row" layout-align="center stretch" hide-sm hide-xs show-gt-sm>
+            <div flex class="panel-default">
+                <div flex class="panel-body">
+                    <div flex layout="row" layout-align="space-between stretch" class="panel panel-default" style="border-color:#00BFA5 !important;">
+                        <div flex>
+                            <div flex layout="column" layout-align="start stretch">
+                                <div flex style="text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                                    <span><strong>Evento:</strong></span>
+                                </div>
+                                <div class="text-center">
+                                    <span class="form-control" ng-click="IngresarEvento(evento, $event)">{{evento.vchNombre}}<i class="fas fa-external-link-square-alt"></i></span>
+                                </div>
+                            </div>
+                            <div flex layout="column" layout-align="start stretch">
+                                <div flex style="text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                                    <span><strong>Fecha inicio:</strong></span>
+                                </div>
+                                <div class="text-center">
+                                    <span class="form-control">{{evento.datFechaInicio | date}}</span>
+                                </div>
+                            </div>
+                            <div flex layout="column" layout-align="start stretch">
+                                <div flex style="text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                                    <span><strong>Fecha Fin:</strong></span>
+                                </div>
+                                <div class="text-center">
+                                    <span class="form-control">{{evento.datFechaFin | date}}</span>
+                                </div>
+                            </div>
+                            <div flex layout="column" layout-align="start stretch">
+                                <div flex style="text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                                    <span><strong>Lugar:</strong></span>
+                                </div>
+                                <div class="text-center">
+                                    <span class="form-control">{{evento.vchLugar}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div flex layout="column" layout-align="stretch" layout-padding>
+                            <div flex class="input-group input-group-sm">
+                                <div class="panel-default text-center" flex>
+                                    <img flex src="data:image/jpg;base64,{{evento.vbImagen}}" width="60%" height="auto" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div flex id="wrapperlarge" layout="row" layout-align="stretch" show-sm hide-gt-sm>
+            <div flex class="panel-default">
+                <div flex class="panel-body">
+                    <div flex layout="row" layout-align="space-between stretch" class="panel panel-default" style="border-color:#00BFA5 !important;">
+                        <div flex>
+                            <div flex layout="column" layout-align="start stretch">
+                                <div flex  style="text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                                    <span><strong>Evento:</strong></span>
+                                </div>
+                                <div class="text-center">
+                                    <span class="form-control" ng-click="IngresarEvento(evento, $event)">{{evento.vchNombre}}<i class="fas fa-external-link-square-alt"></i></span>
+                                </div>
+                            </div>
+                            <div flex layout="column" layout-align="start stretch">
+                                <div flex  style="text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                                    <span><strong>Fecha inicio:</strong></span>
+                                </div>
+                                <div class="text-center">
+                                    <span class="form-control">{{evento.datFechaInicio | date}}</span>
+                                </div>
+                            </div>
+                            <div flex layout="column" layout-align="start stretch">
+                                <div flex style="text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                                    <span><strong>Fecha Fin:</strong></span>
+                                </div>
+                                <div class="text-center">
+                                    <span class="form-control">{{evento.datFechaFin | date}}</span>
+                                </div>
+                            </div>
+                            <div flex layout="column" layout-align="start stretch">
+                                <div flex style="text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;">
+                                    <span><strong>Lugar:</strong></span>
+                                </div>
+                                <div class="text-center">
+                                    <span class="form-control">{{evento.vchLugar}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div flex layout="column" layout-align="stretch" layout-padding>
+                            <div flex class="input-group input-group-sm">
+                                <div class="panel-default text-center" flex>
+                                    <img flex src="data:image/jpg;base64,{{evento.vbImagen}}" width="60%" height="auto" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+</md-dialog>

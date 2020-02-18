@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Task</title>
+    <meta name="application-name" content="Fuji Task" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="icon" href="app/assets/Favicon.ico" type="image/ico" />
+
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="Content/ui-bootstrap-csp.css" rel="stylesheet" />
+    <link href="Content/fontawesome-all.min.css" rel="stylesheet" />
+    <link href="Content/angular-material.min.css" rel="stylesheet" />
+
+    <link href="app/styles/calendar.min.css" rel="stylesheet" />
+    <!--<link href="app/styles/bootstrap.min.css" rel="stylesheet" />-->
+    <link href="app/styles/Roboto.css" rel="stylesheet" />
+    <link href="app/styles/Khula.css" rel="stylesheet" />
+    <link href="app/styles/sb-admin.min.css" rel="stylesheet" />
+
+    <link href="app/styles/flexboxes.css" rel="stylesheet" />
+    <link href="app/styles/Quoting.css" rel="stylesheet" />
+    <link href="app/styles/font-awesome-css.min.css" rel="stylesheet" />
+    <link href="app/styles/ag-theme-balham.css" rel="stylesheet" />
+    <link href="app/styles/animate.css" rel="stylesheet" />
+    <link href="app/styles/custom.css" rel="stylesheet" />
+
+
+</head>
+<body ng-app="TaskMDL" ng-cloak>
+    <header>
+        <md-toolbar layout="column" style="height:50px; background:black;">
+            <div layout="row" layout-align="space-between center" style="height:70px">
+                <img src="app/assets/logo.png" style="height:42px; width:auto;" title="Fuji Task">
+                <div layout-padding show-gt-lg hide-sm hide-xs hide-gt-xs show-md show-gt-md>
+                    <span style="font-family: 'Khula', sans-serif;">Fuji task</span>
+                </div>
+                <div ng-if="logeado" ng-include="'app/modules/home/menu.html'"></div>
+            </div>
+        </md-toolbar>
+    </header>
+    <div id="wrapper">
+        <div ng-if="logeado" ng-include="'app/modules/home/sideMenu.html'" style="background-color: rgb(0, 150, 136) !important;"></div>
+        <div id="content-wrapper">
+            <div class="container-fluid">
+                <div id="mainContainer" ng-view>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+            <!-- Sticky Footer -->
+            <!--<footer ng-if="logeado" class="sticky-footer">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright © Kotoba 2018</span>
+                    </div>
+                </div>
+            </footer>-->
+        </div>
+        <!-- /.content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+
+    <script src="app/scripts/jquery-3.2.1.min.js"></script>
+    <!--<script src="app/scripts/bootstrap.min.js"></script>-->
+    <script src="app/scripts/moment.js"></script>
+
+    <!-- Angular Material requires Angular.js Libraries -->
+    <script src="app/scripts/angular.min.js"></script>
+    <script src="app/scripts/angular-locale_es-mx.min.js"></script>
+    <script src="app/scripts/angular-animate.min.js"></script>
+    <script src="app/scripts/angular-aria.min.js"></script>
+    <script src="app/scripts/angular-messages.min.js"></script>
+    <script src="app/scripts/angular-route.min.js"></script>
+    <script src="app/scripts/angular-cookies.min.js"></script>
+    <script src="app/scripts/angular-sanitize.js"></script>
+    <script src="app/scripts/alasql.min.js"></script>
+    <script src="app/scripts/xlsx.core.min.js"></script>
+    <script src="app/scripts/angular-idle.min.js"></script>
+    <!-- Angular Material Library -->
+    <script src="app/scripts/angular-material.min.js"></script>
+    <script src="app/scripts/ui-bootstrap-tpls.min.js"></script>
+    <script src="app/scripts/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="app/scripts/jquery-easing/jquery.easing.min.js"></script>
+    <script src="app/scripts/sb-admin.min.js"></script>
+    <script src="Scripts/Chart.min.js"></script>
+    <script src="Scripts/angular-chart.min.js"></script>
+    <script src="Scripts/angularjs-gauge.js"></script>
+    <script src="app/scripts/ag-grid-community.js"></script>
+    <!--<script src="app/scripts/datatables/jquery.dataTables.js"></script>
+    <script src="app/scripts/datatables/dataTables.bootstrap4.js"></script>-->
+    <script src="app/scripts/js/jquery/jquery-ui-1.8.17.custom.min.js"></script>
+    <script src="app/scripts/dist/jspdf.debug.js"></script>
+    <script src="app/scripts/dist/jspdf.min.js"></script>
+    <script src="app/scripts/js/basic.js"></script>
+
+
+    <!-- Sitio -->
+    <script src="app/scripts/download.js"></script>
+    <script src="app/TaskMDL.js"></script>
+    <script src="app/modules/login/loginController.js"></script>
+    <script src="app/modules/login/loginServices.js"></script>
+    <script src="app/modules/login/credenciales/enviarCredencialesController.js"></script>
+    <script src="app/modules/login/credenciales/recuperarCredencialesController.js"></script>
+    <script src="app/modules/home/homeController.js"></script>
+    <script src="app/modules/home/homeServices.js"></script>
+    <script src="app/modules/home/viewEvento/viewEventoController.js"></script>
+    <script src="app/modules/home/aprobarDireccion/aprobarDireccionController.js"></script>
+    <script src="app/modules/home/user/update/editarUsuarioController.js"></script>
+    <script src="app/modules/home/admin/users/usuariosServices.js"></script>
+    <script src="app/modules/home/admin/users/usuariosController.js"></script>
+
+
+    <script src="app/scripts/calendar-tpls.js"></script>
+    <script>
+        function resizeIframe(obj) {
+            obj.style.height = (document.body.offsetHeight - 110) + 'px';
+        }
+    </script>
+</body>
+</html>

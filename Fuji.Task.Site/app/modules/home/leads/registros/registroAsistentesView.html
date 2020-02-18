@@ -1,0 +1,173 @@
+﻿<md-content layout="row" layout-align="center" ng-cloak>
+    <md-card flex-xs="100" flex-gt-xs="100" flex-gt-sm="100">
+        <md-toolbar md-scroll-shrink>
+            <div class="md-toolbar-tools">
+                <md-menu ng-show="AccessAddAsistente">
+                    <md-button aria-label="menuAdministracionCotizaciones" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                        <md-icon md-menu-origin class="fas fa-bars fa-2x"></md-icon>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button class=" md-primary" aria-label="Use Android" ng-click="AgregarAsistente($event, evento)">
+                                <md-icon class="fas fa-plus fa-lg"></md-icon>
+                                Agregar prospecto
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+                <h2 flex md-truncate>
+                    <span>{{evento.vchNombre}}</span>
+                </h2>
+                <div layout="row">
+                    <md-button ng-click="ExportarEvento(evento)" ng-disabled="loading" aria-label="btnExport" title="Exportar a Excel">
+                        <md-icon md-menu-align-target class="fas fa-file-excel fa-2x"></md-icon>
+                    </md-button>
+                    <md-button ng-click="toggleRight()" ng-hide="isOpenRight()" ng-disabled="loading" aria-label="btnBuscar">
+                        <md-icon md-menu-align-target class="fas fa-chevron-right fa-2x"></md-icon>
+                    </md-button>
+                </div>
+            </div>
+        </md-toolbar>
+        <md-progress-linear class="md-warn" md-mode="indeterminate" ng-if="loading"></md-progress-linear>
+        <md-card-title style="background: url('app/assets/FFM.png') ; background-size: cover;">
+            <md-card-title-text>
+                <div style="background-color: rgba(255, 255, 255, 0.4);" layout="column" layout-align="space-around stretch">
+                    <md-sidenav class="md-sidenav-right md-whiteframe-4dp" md-component-id="right">
+                        <md-toolbar class="md-theme-light">
+                            <h1 class="md-toolbar-tools">Buscar Evento</h1>
+                        </md-toolbar>
+                        <md-content layout-padding>
+                            <div class="panel panel-default" style="border-color:#00BFA5 !important;">
+                                <div class="panel-heading" style="background-color:#38946b !important; border-color:#38946b !important; color:white !important;"><strong>Información del evento</strong></div>
+                                <div class="panel-body" layout-gt-sm="row">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-addon primary"
+                                              style="min-width:128px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;"><strong>Fecha inicio:</strong></span>
+                                        <span class="form-control">{{evento.datFechaInicio | date}}</span>
+                                    </div>
+                                </div>
+                                <div class="panel-body" layout-gt-sm="row">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-addon primary"
+                                              style="min-width:128px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;"><strong>Fecha Fin:</strong></span>
+                                        <span class="form-control">{{evento.datFechaFin | date}}</span>
+                                    </div>
+                                </div>
+                                <div class="panel-body" layout-gt-sm="row">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-addon primary"
+                                              style="min-width:128px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;"><strong>Lugar:</strong></span>
+                                        <span class="form-control">{{evento.vchLugar}}</span>
+                                    </div>
+                                </div>
+                                <div class="panel-body" layout-gt-sm="row">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-addon primary"
+                                              style="min-width:128px !important; text-align:left !important; background-color:#38946b !important; color:white !important; border-color: #38946b !important;"><strong>Asociación:</strong></span>
+                                        <span class="form-control">{{evento.vchAsociacion}}</span>
+                                    </div>
+                                </div>
+                                <div layout="column" layout-align="stretch" layout-padding>
+                                    <div class="input-group input-group-sm">
+                                        <img src="data:image/jpg;base64,{{evento.vbImagen}}" width="100%" height="auto" />
+                                    </div>
+                                </div>
+                            </div>
+                        </md-content>
+                    </md-sidenav>
+                    <!--Pantalla modo PC-->
+                    <div layout="column" layout-align="space-around stretch">
+                        <div layout="row" layout-align="space-between start">
+                            <h4>Asistentes al evento</h4>
+                        </div>
+                        <div>
+                            <div class="panel-body">
+                                <div id="Capacitacion_header" layout="row" layout-align="start center" layout-padding>
+                                    <div style="min-width:50px;"></div>
+                                    <div flex><span><strong>Nombre</strong></span></div>
+                                    <div flex hide="" show-gt-sm=""><span><strong>Email</strong></span></div>
+                                    <div flex hide="" show-gt-sm=""><span><strong>Teléfono</strong></span></div>
+                                    <div flex hide="" show-gt-md=""><span><strong>Estado</strong></span></div>
+                                    <div flex hide="" show-gt-md=""><span><strong>Usuario</strong></span></div>
+                                    <div flex hide="" show-gt-md=""><span><strong>Usuario Seguimiento</strong></span></div>
+                                    <!--<div hide="" show-gt-sm=""><span><strong>Activo</strong></span></div>-->
+                                </div>
+                                <div id="facturas_body" layout="column" ng-repeat="participante in asistentes">
+                                    <div layout="row" layout-align="start center" layout-padding style="padding-top:2px; padding-bottom:2px; margin-top:0; margin-bottom:0; border-color:#e4e4e4; border-style: solid; border-width: 1px 0 0 0;">
+                                        <div style="min-width:50px;" layout="row">
+                                            <md-button ng-if="user.intTipoUsuarioID <= 3" ng-click="AtencionProspecto(participante, $event)" aria-label="UsuarioAtencion">
+                                                <md-icon class="fas fa-user-cog fa-lg"></md-icon>
+                                            </md-button>
+                                            <md-button ng-click="MostrarRegistros(participante, $event)" aria-label="Mostrar Registro" style="margin-top:0 !important; margin-bottom: 0 !important;">
+                                                <md-icon ng-class="participante.showRegisters ? 'fas fa-arrow-down fa-lg' : 'fas fa-arrow-right fa-lg'"></md-icon>
+                                            </md-button>
+                                        </div>
+                                        <div flex>
+                                            {{participante.vchNombreCliente}}
+                                        </div>
+                                        <div flex hide="" show-gt-sm="">
+                                            {{participante.vchEmailCliente}}
+                                        </div>
+                                        <div flex hide="" show-gt-sm="">
+                                            {{participante.vchTelefono}}
+                                        </div>
+                                        <div flex hide="" show-gt-md="">
+                                            <span>{{participante.vchEstado}}</span>
+                                        </div>
+                                        <div flex hide="" show-gt-md="">
+                                            <span ng-if="participante.bitOtro">{{participante.por}}</span>
+                                        </div>
+                                        <div flex hide="" show-gt-md="">
+                                            <span>{{participante.vchUsuarioSeguimiento}}</span>
+                                        </div>
+                                        <!--<div style="min-width:50px;" hide="" show-gt-sm="">
+                                            <span ng-show='participante.bitActive'><i class="fas fa-check red" style="color:green"></i></span>
+                                            <span ng-show='!participante.bitActive'><i class="fas fa-times green" style="color:red"></i></span>
+                                        </div>-->
+                                    </div>
+                                    <div ng-show="participante.showRegisters" layout-padding style="padding-left:40px !important;">
+                                        <div class="panel panel-default" style="border-left-color:green !important; border-left-width:5px !important;">
+                                            <div class="panel-body">
+                                                <div flex hide-gt-sm="">
+                                                    <strong> Email:</strong> {{participante.vchEmailCliente}}
+                                                </div>
+                                                <div flex hide-gt-sm="">
+                                                    <strong>Teléfono:</strong> {{participante.vchTelefono}}
+                                                </div>
+                                                <div flex hide-gt-sm="">
+                                                    <strong>Estado:</strong> {{participante.vchEstado}}
+                                                </div>
+                                                <div flex hide-gt-sm="">
+                                                    <strong>Usuario de Alta:</strong> {{participante.por}}
+                                                </div>
+                                                <div flex hide-gt-sm="">
+                                                    <strong> Usuario de seguimiento:</strong> {{participante.vchUsuarioSeguimiento}}
+                                                </div>
+                                                <div id="facturas_header2" layout="row" layout-align="start center" layout-padding>
+                                                    <div flex style="min-width:50px;"><span><strong>Producto de Interés</strong></span></div>
+                                                </div>
+                                                <div id="facturas_body2" layout="column" ng-repeat="registro in participante.DetalleAsistente">
+                                                    <div layout="row" layout-align="start center" layout-padding style="padding-top:2px; padding-bottom:2px; margin-top:0; margin-bottom:0; border-color:#e4e4e4; border-style: solid; border-width: 1px 0 0 0;">
+                                                        <div flex style="min-width:50px; text-align:right;">{{registro.vchNombreProducto}}</div>
+                                                    </div>
+                                                </div>
+                                                <div id="facturas_header2" layout="row" layout-align="start center" layout-padding>
+                                                    <div flex style="min-width:50px;"><span><strong>Adicionales</strong></span></div>
+                                                </div>
+                                                <div layout="column">
+                                                    <div layout="row" layout-align="start center" layout-padding style="padding-top:2px; padding-bottom:2px; margin-top:0; margin-bottom:0; border-color:#e4e4e4; border-style: solid; border-width: 1px 0 0 0;">
+                                                        <div flex style="min-width:50px;">{{participante.vchAdicionales}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </md-card-title-text>
+        </md-card-title>
+    </md-card>
+</md-content>

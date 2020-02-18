@@ -1,0 +1,44 @@
+﻿<md-dialog aria-label="Agregar Evento">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Eventos disponibles</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon class="fas fa-close fa-2x" aria-label="Close dialog"></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-progress-linear ng-if="loading" class="md-accent" md-mode="indeterminate"></md-progress-linear>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h2>Seleccionar evento</h2>
+                <ng-form layout="column" name="FormularioEvento" layout-padding class="panel-group">
+                    <div class="panel panel-default" style="border-left-color:#00BFA5 !important; border-left-width:5px !important;">
+                        <div layout="column" layout-align="start stretch" class="panel-body">
+                            <md-input-container>
+                                <label>Línea de Productos</label>
+                                <md-select ng-model="evento" [width]="'100%'" name="evento" required>
+                                    <md-option ng-repeat="evento in eventos" ng-value="evento">
+                                        {{evento.vchNombre}}
+                                    </md-option>
+                                </md-select>
+                                <div ng-messages="FormularioEvento.evento.$error" ng-if="FormularioEvento.evento.$touched">
+                                    <div ng-message="required">Necesitas seleccionar un evento</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </ng-form>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button class="md-raised" ng-disabled="loading" ng-click="cancel()">
+                Salir
+            </md-button>
+            <md-button class="md-raised md-primary" ng-disabled="loading || FormularioEvento.$invalid" ng-click="IngresarEvento(evento, $event)">
+                Seleccionar
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
